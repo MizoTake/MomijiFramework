@@ -80,30 +80,4 @@ public class TagNameCreator
         tagNames.ForEach(tagName => builder.AppendFormat(@" ""{0}"",", CheckNumber(tagName)));
         builder.AppendLine(" };");
     }
-
-    // TODO: 数字だけのTagがあったら英語に変える処理
-    /// <summary>
-    /// WizAcaで数字のTagがあったので緊急措置
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <returns></returns>
-    static string CheckNumber(string tagName)
-    {
-        int name;
-        if (Int32.TryParse(tagName, out name))
-        {
-            switch (name)
-            {
-                case 1:
-                    return "One";
-                case 2:
-                    return "Two";
-                case 3:
-                    return "Three";
-                case 4:
-                    return "Four";
-            }
-        }
-        return tagName;
-    }
 }
