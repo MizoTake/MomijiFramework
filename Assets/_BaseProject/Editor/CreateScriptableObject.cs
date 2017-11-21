@@ -9,7 +9,7 @@ public class CreateScriptableObject : ScriptableObject
     [MenuItem("Assets/Create/ScriptableObject")]
     public static void CreateAsset()
     {
-        CreateAsset<ScriptableObject>();
+        CreateAsset<SoundParameter>();
     }
 
     public static void CreateAsset<Type>() where Type : ScriptableObject
