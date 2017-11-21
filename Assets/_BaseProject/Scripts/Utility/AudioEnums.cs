@@ -11,8 +11,8 @@ public enum SE
 {
 };
 /// <summary>
-/// Access VOICE Enum
+/// Access Voice Enum
 /// </summary>
-public enum VOICE
+public enum Voice
 {
 };

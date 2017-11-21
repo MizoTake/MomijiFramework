@@ -56,7 +56,7 @@ public class AudioEnumCreator
         SoundParameter source = LoadResources.ScriptableObject("SoundParameter") as SoundParameter;
         WriteAudioEnum(builder, source.BGMClip, SoundType.BGM);
         WriteAudioEnum(builder, source.SEClip, SoundType.SE);
-        WriteAudioEnum(builder, source.VoiceClip, SoundType.VOICE);
+        WriteAudioEnum(builder, source.VoiceClip, SoundType.Voice);
     }
 
     static void WriteAudioEnum(System.Text.StringBuilder builder, AudioClip[] audioNames, SoundType type)
@@ -73,11 +73,4 @@ public class AudioEnumCreator
         });
         builder.AppendLine("};");
     }
-}
-
-public enum SoundType
-{
-    BGM,
-    SE,
-    VOICE
 }
