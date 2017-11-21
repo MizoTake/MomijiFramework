@@ -68,16 +68,16 @@ public class TagNameCreator
         tagNames.ToList().ForEach(tagName =>
       {
           builder.Append("\t").AppendLine("/// <summary>");
-          builder.Append("\t").AppendFormat("/// return \"{0}\"", CheckNumber(tagName)).AppendLine();
+          builder.Append("\t").AppendFormat("/// return \"{0}\"", tagName).AppendLine();
           builder.Append("\t").AppendLine("/// </summary>");
-          builder.Append("\t").AppendFormat(@"public static string @{0} = ""{1}"";", CheckNumber(tagName.SymbolReplace()), tagName).AppendLine();
+          builder.Append("\t").AppendFormat(@"public static string @{0} = ""{1}"";", tagName.SymbolReplace(), tagName).AppendLine();
       });
     }
 
     static void WriteTagNameArray(System.Text.StringBuilder builder, List<string> tagNames)
     {
         builder.Append("\t").Append("public static readonly string[] TAGS = new string[] {");
-        tagNames.ForEach(tagName => builder.AppendFormat(@" ""{0}"",", CheckNumber(tagName)));
+        tagNames.ForEach(tagName => builder.AppendFormat(@" ""{0}"",", tagName));
         builder.AppendLine(" };");
     }
 }
