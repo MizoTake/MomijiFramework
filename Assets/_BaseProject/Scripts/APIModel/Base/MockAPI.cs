@@ -18,12 +18,12 @@ public class MockAPI<T> : Singleton<T> where T : Singleton<T>
     {
         get
         {
-#if UNITY_EDITOR
-            return Application.streamingAssetsPath + DIRECTORY_NAME;
-#elif UNITY_IPHONE
+#if UNITY_IPHONE
             return Application.dataPath + "/Raw" + DIRECTORY_NAME;
 #elif UNITY_ANDROID
             return "jar:file://" + Application.dataPath + "!/assets" + DIRECTORY_NAME;
+#else
+            return Application.streamingAssetsPath + DIRECTORY_NAME;
 #endif
         }
     }
@@ -44,24 +44,24 @@ public class MockAPI<T> : Singleton<T> where T : Singleton<T>
     /// <param name="array">配列かどうか</param>
     private IEnumerator _Send<T>(RequestData<T> data, bool array = false)
     {
-#if UNITY_EDITOR
+#if UNITY_ANDROID || UNITY_IPHONE
+        var path = data.request.url;
+#else
         // http://localhost を削除
         var path = data.request.url.Remove(0, 16);
-#elif UNITY_ANDROID || UNITY_IPHONE
-        var path = data.request.url;
 #endif
         Debug.Log("reading json file: " + path);
 
-#if UNITY_EDITOR
-        StreamReader reader = new StreamReader(path, Encoding.Default);
-        yield return new WaitForSeconds(1.0f);
-        // UTF8文字列として取得する
-        string text = reader.ReadToEnd();
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
         WWW reader = new WWW(path);
         while (!reader.isDone) { }
         string text = reader.text;
         if (HasBomWithText(reader.bytes)) text = GetDeletedBomText(reader.text);
+#else
+        StreamReader reader = new StreamReader(path, Encoding.Default);
+        yield return new WaitForSeconds(1.0f);
+        // UTF8文字列として取得する
+        string text = reader.ReadToEnd();
 #endif
         using (TextReader stream = new StringReader(text))
         {
