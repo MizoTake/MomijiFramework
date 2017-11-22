@@ -5,6 +5,6 @@ using UnityEngine;
 public struct EditorExtensionConst
 {
 
-    public static string SAVE_FILE_POINT = "/_BaseProject/Scripts/Utility/";
+    public static string SAVE_FILE_POINT = "/_MomijiFramework/Scripts/Utility/";
 
 }
