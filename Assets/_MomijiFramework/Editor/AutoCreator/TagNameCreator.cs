@@ -16,7 +16,7 @@ public class TagNameCreator
         if (EditorApplication.isPlaying || Application.isPlaying)
             return;
 
-        BuildTagName();
+        EditorApplication.delayCall += BuildTagName;
     }
 
     static TagNameCreator()
@@ -24,7 +24,7 @@ public class TagNameCreator
         if (EditorApplication.isPlaying || Application.isPlaying)
             return;
 
-        BuildTagName();
+        EditorApplication.delayCall += BuildTagName;
     }
 
     static void BuildTagName()
@@ -42,6 +42,7 @@ public class TagNameCreator
         System.IO.File.WriteAllText(assetPath, text);
         EditorPrefs.SetInt(TAGNAME_HASH_KEY, text.GetHashCode());
         AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
+        EditorApplication.delayCall -= BuildTagName;
     }
 
     static System.Text.StringBuilder WriteTagManagerClass(System.Text.StringBuilder builder)
