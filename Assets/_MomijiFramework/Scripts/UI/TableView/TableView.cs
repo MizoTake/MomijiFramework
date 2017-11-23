@@ -88,7 +88,7 @@ public class TableView : MonoBehaviour
         _nowCells = PAGING_VALUE;
     }
 
-    private void PagingGet()
+    public void PagingGet()
     {
         if (_nowCells >= _allRank - 1) return;
         _indicator.Show.Restart();
@@ -99,7 +99,7 @@ public class TableView : MonoBehaviour
         }, (_) => Error());
     }
 
-    private void Paging(Response res)
+    public void Paging(Response res)
     {
         var myUuid = PlayerInfo.Uuid;
         res.result.ToList().ForEach((data, i) =>

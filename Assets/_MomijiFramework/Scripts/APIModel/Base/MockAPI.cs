@@ -50,10 +50,10 @@ public class MockAPI<T> : Singleton<T> where T : Singleton<T>
             directoryPath = data.request.url.ReplaceDelete(APIConst.URL);
         }
 #if UNITY_ANDROID || UNITY_IPHONE
-        var path = directoryPath;
+        var path = URL + directoryPath;
 #else
         // http://localhost を削除
-        var path = directoryPath.Remove(0, 16);
+        var path = URL + directoryPath.Remove(0, 16);
 #endif
         Debug.Log("reading json file: " + path);
 
