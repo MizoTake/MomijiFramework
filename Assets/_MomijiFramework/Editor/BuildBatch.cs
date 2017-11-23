@@ -5,6 +5,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
+//jenkinsで呼ぶとき： -quit -batchmode -executeMethod BuildBatch.使うメソッド
+
 public class BuildBatch
 {
     private struct BuildParameter
