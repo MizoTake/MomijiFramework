@@ -15,7 +15,7 @@ public class TableView : MonoBehaviour
     [SerializeField]
     private GameObject _item;
     [SerializeField]
-    private Text _header;
+    private Text _headerText;
     [SerializeField]
     private Text _rankText;
     [SerializeField]
@@ -28,75 +28,41 @@ public class TableView : MonoBehaviour
     private int beforeScore = -1;
     private int beforeRank = 0;
 
-    public int MyRank { set { _myRank = value; } }
-    public IndicatorView Indicator => _indicator;
-    public Text RankText => _rankText;
-    public int AllRank => _allRank;
-    public int NowCells => _nowCells;
-    public int MAX_Cell => PAGING_VALUE;
-
     // Use this for initialization
     void Start()
     {
         _pool = new RankingItemPool(_item.GetComponent<RankingItem>(), transform);
         this.OnDestroyAsObservable().Subscribe(_ => _pool.Dispose());
 
-        if (PlayerPrefs.HasKey(UserInfo.UUID_NAME))
+        _indicator.Show.Restart();
+        if (PlayerPrefs.HasKey(PlayerInfo.UUID_NAME))
         {
-            _indicator.Show.Restart();
-            Ranking.GetLastRow(UserInfo.Uuid, (_) =>
+            Ranking.GetLastRow(PlayerInfo.Uuid, (_) =>
             {
-                _myRank = int.Parse(_.myRank);
-                _allRank = int.Parse(_.lastRow);
-                _rankText.text = _myRank + " / " + (_allRank - 1);
-                Ranking.Get(_nowCells, (_nowCells + PAGING_VALUE > _allRank) ? _allRank % PAGING_VALUE - 1 : PAGING_VALUE, (result) =>
-                {
-                    ReloadData(result);
-                    _indicator.Dismiss.Restart();
-                }, (error) =>
-                {
-                    _header.text = "Network Error";
-                    _header.color = Color.red;
-                    _indicator.Dismiss.Restart();
-                });
+                UpdateRankText(_);
+                Ranking.Get(_nowCells, (_nowCells + PAGING_VALUE > _allRank) ? _allRank % PAGING_VALUE - 1 : PAGING_VALUE, (result) => ReloadData(result), (error) => Error());
             });
         }
         else
         {
-            _indicator.Show.Restart();
             Ranking.GetUuid((_) =>
             {
-                UserInfo.Uuid = _.uuid;
+                PlayerInfo.Uuid = _.uuid;
                 Ranking.GetLastRow(_.uuid, (rank) =>
                 {
-                    _myRank = int.Parse(rank.myRank);
-                    _allRank = int.Parse(rank.lastRow);
-                    _rankText.text = _myRank + " / " + (_allRank - 1);
-                    Ranking.Get(_nowCells, (_nowCells + PAGING_VALUE > _allRank) ? _allRank % PAGING_VALUE - 1 : PAGING_VALUE, (result) =>
-                    {
-                        ReloadData(result);
-                        _indicator.Dismiss.Restart();
-                    }, (error) =>
-                    {
-                        _header.text = "Network Error";
-                        _header.color = Color.red;
-                        _indicator.Dismiss.Restart();
-                    });
+                    UpdateRankText(rank);
+                    Ranking.Get(_nowCells, (_nowCells + PAGING_VALUE > _allRank) ? _allRank % PAGING_VALUE - 1 : PAGING_VALUE, (result) => ReloadData(result), (error) => Error());
                 });
-            }, (_) =>
-            {
-                _header.text = "Network Error";
-                _header.color = Color.red;
-                _indicator.Dismiss.Restart();
-            });
+            }, (_) => Error());
         }
     }
 
-    public void ReloadData(Response res)
+    private void ReloadData(Response res)
     {
+        _indicator.Dismiss.Restart();
         beforeScore = -1;
         beforeRank = 0;
-        var myUuid = UserInfo.Uuid;
+        var myUuid = PlayerInfo.Uuid;
         _listItem.ForEach((_) =>
         {
             _pool.Return(_);
@@ -122,7 +88,7 @@ public class TableView : MonoBehaviour
         _nowCells = PAGING_VALUE;
     }
 
-    public void PagingGet()
+    private void PagingGet()
     {
         if (_nowCells >= _allRank - 1) return;
         _indicator.Show.Restart();
@@ -130,16 +96,12 @@ public class TableView : MonoBehaviour
         {
             _indicator.Dismiss.Restart();
             Paging(_);
-        }, (_) =>
-        {
-            _header.text = "Network Error";
-            _header.color = Color.red;
-        });
+        }, (_) => Error());
     }
 
     private void Paging(Response res)
     {
-        var myUuid = UserInfo.Uuid;
+        var myUuid = PlayerInfo.Uuid;
         res.result.ToList().ForEach((data, i) =>
         {
             var item = _pool.Rent();
@@ -158,5 +120,19 @@ public class TableView : MonoBehaviour
             _listItem.Add(rank);
         });
         _nowCells += (_nowCells + PAGING_VALUE > _allRank) ? _allRank % PAGING_VALUE - 1 : PAGING_VALUE;
+    }
+
+    private void UpdateRankText(LastRowResponse res)
+    {
+        _myRank = int.Parse(res.myRank);
+        _allRank = int.Parse(res.lastRow);
+        _rankText.text = _myRank + " / " + (_allRank - 1);
+    }
+
+    private void Error()
+    {
+        _headerText.text = "Network Error";
+        _headerText.color = Color.red;
+        _indicator.Dismiss.Restart();
     }
 }

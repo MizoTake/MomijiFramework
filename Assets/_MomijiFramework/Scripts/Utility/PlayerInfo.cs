@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct UserInfo
+public struct PlayerInfo
 {
     public static readonly string UUID_NAME = "uuid";
     public static readonly string NAME = "name";

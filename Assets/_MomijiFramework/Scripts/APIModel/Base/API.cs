@@ -10,9 +10,6 @@ using UnityEngine.Networking;
 /// </summary>
 public class API<T> : Singleton<T> where T : Singleton<T>
 {
-
-    protected static string URL = "";
-
     /// <summary>
     /// APIコール
     /// </summary>

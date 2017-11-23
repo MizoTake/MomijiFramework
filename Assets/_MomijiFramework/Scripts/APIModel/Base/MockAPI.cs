@@ -44,11 +44,16 @@ public class MockAPI<T> : Singleton<T> where T : Singleton<T>
     /// <param name="array">配列かどうか</param>
     private IEnumerator _Send<T>(RequestData<T> data, bool array = false)
     {
+        var directoryPath = data.request.url;
+        if (APIConst.URL.Length > 0)
+        {
+            directoryPath = data.request.url.ReplaceDelete(APIConst.URL);
+        }
 #if UNITY_ANDROID || UNITY_IPHONE
-        var path = data.request.url;
+        var path = directoryPath;
 #else
         // http://localhost を削除
-        var path = data.request.url.Remove(0, 16);
+        var path = directoryPath.Remove(0, 16);
 #endif
         Debug.Log("reading json file: " + path);
 

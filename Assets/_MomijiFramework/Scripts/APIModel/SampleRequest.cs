@@ -17,7 +17,7 @@ public class SampleRequest : API<SampleRequest>
     /// <param name="onError"> 通信中にエラーが発生した際の処理 </param>
     public static void Get(System.Action<SampleResponse> onSuccess, System.Action<string> onError = null)
     {
-        RequestData<SampleResponse> request = new RequestData<SampleResponse>(UnityWebRequest.Get(Path.Combine(URL, path)));
+        RequestData<SampleResponse> request = new RequestData<SampleResponse>(UnityWebRequest.Get(Path.Combine(APIConst.URL, path)));
         request.onComplete = onSuccess;
         Instance.Send<SampleResponse>(request);
     }
@@ -31,7 +31,7 @@ public class SampleRequest : API<SampleRequest>
     {
         WWWForm form = new WWWForm();
         form.AddField("Sample", sample);
-        RequestData<SampleResponse> request = new RequestData<SampleResponse>(UnityWebRequest.Post(URL, form));
+        RequestData<SampleResponse> request = new RequestData<SampleResponse>(UnityWebRequest.Post(APIConst.URL, form));
         request.onComplete = onSuccess;
         Instance.Send<SampleResponse>(request);
     }
