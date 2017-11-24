@@ -14,5 +14,16 @@ public static class StringExtensions
         invalidChar.ToList().ForEach(s => name = name.Replace(s, string.Empty));
         return name;
     }
+
+    /// <summary>
+    /// 指定した文字列を消して返す
+    /// </summary>
+    /// <param name="characters">Characters.</param>
+    /// <param name="target">消す対象</param>
+    /// <returns></returns>
+    public static string ReplaceDelete(this string characters, string target)
+    {
+        return characters.Replace(target, "");
+    }
 }
 

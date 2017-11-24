@@ -17,7 +17,7 @@ public class SampleMockRequest : MockAPI<SampleMockRequest>
     /// <param name="onError"> 通信中にエラーが発生した際の処理 </param>
     public static void Get(System.Action<SampleMockResponse> onSuccess, System.Action<string> onError = null)
     {
-        RequestData<SampleMockResponse> request = new RequestData<SampleMockResponse>(UnityWebRequest.Get(Path.Combine(URL, path)));
+        RequestData<SampleMockResponse> request = new RequestData<SampleMockResponse>(UnityWebRequest.Get(Path.Combine(APIConst.URL, path)));
         request.onComplete = onSuccess;
         request.onError = onError;
         Instance.Send<SampleMockResponse>(request);
@@ -33,7 +33,7 @@ public class SampleMockRequest : MockAPI<SampleMockRequest>
         WWWForm form = new WWWForm();
         form.AddField("Sample", sample);
         //postでも、Mockはひとまず この書き方
-        RequestData<SampleMockResponse> request = new RequestData<SampleMockResponse>(UnityWebRequest.Get(Path.Combine(URL, path)));
+        RequestData<SampleMockResponse> request = new RequestData<SampleMockResponse>(UnityWebRequest.Get(Path.Combine(APIConst.URL, path)));
         request.onComplete = onSuccess;
         request.onError = onError;
         Instance.Send<SampleMockResponse>(request);
