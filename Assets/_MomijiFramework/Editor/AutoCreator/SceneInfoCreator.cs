@@ -19,7 +19,7 @@ public class SceneInfoCreator
         if (EditorApplication.isPlaying || Application.isPlaying)
             return;
 
-        BuildSceneName();
+        EditorApplication.delayCall += BuildSceneName;
     }
 
     static SceneInfoCreator()
@@ -27,7 +27,7 @@ public class SceneInfoCreator
         if (EditorApplication.isPlaying || Application.isPlaying)
             return;
 
-        BuildSceneName();
+        EditorApplication.delayCall += BuildSceneName;
     }
 
     static void BuildSceneName()
@@ -45,6 +45,7 @@ public class SceneInfoCreator
         System.IO.File.WriteAllText(assetPath, text);
         EditorPrefs.SetInt(SCENE_ENUM_HASH_KEY, text.GetHashCode());
         AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
+        EditorApplication.delayCall -= BuildSceneName;
     }
 
     static System.Text.StringBuilder WriteTagManagerClass(System.Text.StringBuilder builder)
