@@ -5,17 +5,35 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class RxTouch : MonoBehaviour
+public class RxGesture : MonoBehaviour
 {
+    [System.Serializable]
+    public class ClickEvent : UnityEngine.Events.UnityEvent { }
+    [SerializeField]
+    private ClickEvent _click = new ClickEvent();
+    [System.Serializable]
+    public class LfetFlickEvent : UnityEngine.Events.UnityEvent { }
+    [SerializeField]
+    private LfetFlickEvent _leftFlick = new LfetFlickEvent();
+    [System.Serializable]
+    public class RightFlickEvent : UnityEngine.Events.UnityEvent { }
+    [SerializeField]
+    private RightFlickEvent _rightFlick = new RightFlickEvent();
+    [System.Serializable]
+    public class DownFlickEvent : UnityEngine.Events.UnityEvent { }
+    [SerializeField]
+    private DownFlickEvent _downFlick = new DownFlickEvent();
+    [System.Serializable]
+    public class UpFlick : UnityEngine.Events.UnityEvent { }
+    [SerializeField]
+    private UpFlick _up = new UpFlick();
 
-    // Use this for initialization
-    void Start()
+    void Awake()
     {
         var start = this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButtonDown(0))
             .Select(_ => Input.mousePosition);
         var end = this.UpdateAsObservable()
-            // 一定時間以内にUpされないと検出しない
             .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(1)))
             .Where(_ => Input.GetMouseButtonUp(0))
             .Select(_ => Input.mousePosition)
@@ -24,31 +42,30 @@ public class RxTouch : MonoBehaviour
         start.SelectMany(startPos => end.Select(endPos => startPos - endPos))
             .Subscribe(v =>
             {
-                // 一定距離以上動かさないとクリック扱い
                 if (v.magnitude < 50)
                 {
-                    Debug.Log("Click");
+                    _click.Invoke();
                 }
                 else if (Math.Abs(v.x) > Mathf.Abs(v.y))
                 {
                     if (v.x > 0)
                     {
-                        Debug.Log("Left");
+                        _leftFlick.Invoke();
                     }
                     else
                     {
-                        Debug.Log("Right");
+                        _rightFlick.Invoke();
                     }
                 }
                 else
                 {
                     if (v.y > 0)
                     {
-                        Debug.Log("Down");
+                        _downFlick.Invoke();
                     }
                     else
                     {
-                        Debug.Log("Up");
+                        _up.Invoke();
                     }
                 }
             });
