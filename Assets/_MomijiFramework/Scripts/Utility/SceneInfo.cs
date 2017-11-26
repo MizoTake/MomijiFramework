@@ -8,10 +8,10 @@ public sealed class SceneInfo
 	/// </summary>
 	public enum SceneEnum
 	{
-		MomijiFramework = 0
+		MockGame = 0
 	};
 	/// <summary>
 	/// Access Scene Name Array
 	/// </summary>
-	public static readonly string[] SceneNames = new string[] { "MomijiFramework" }; 
+	public static readonly string[] SceneNames = new string[] { "MockGame" }; 
 }

@@ -52,6 +52,15 @@ public class TransSceneManager : Singleton<TransSceneManager>
     }
 
     /// <summary>
+    /// 指定したSceneに強制リロードします
+    /// </summary>
+    /// <param name="sceneEnum"></param>
+    public static void ReloadScene(SceneInfo.SceneEnum sceneEnum)
+    {
+        SceneManager.LoadScene(sceneEnum.ToString());
+    }
+
+    /// <summary>
     /// シーンを非同期的に読み込みます
     /// </summary>
     /// <returns>The scene.</returns>
