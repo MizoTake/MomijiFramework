@@ -87,7 +87,7 @@ public class PlayGameSequence : Singleton<PlayGameSequence>
             .Where(_ => _ == GameState.Result)
             .Subscribe(_ =>
             {
-                _countDownText.ViewText.text += "\n\nTouch to Title";
+                _countDownText.ViewText.text += " sec\n\nTouch to Title";
                 timeRectTransform.DOMoveY(Screen.height / 2.0f, 1.0f).Play();
                 close.Restart();
             })

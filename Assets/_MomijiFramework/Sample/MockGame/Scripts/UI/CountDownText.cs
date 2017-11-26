@@ -19,7 +19,7 @@ public class CountDownText : MonoBehaviour
 
         CountDownStart = DOTween.Sequence();
         CountDownStart
-            .AppendInterval(3.0f)
+            .AppendInterval(5.0f)
             .AppendCallback(() => _text.text = "3")
             .AppendInterval(1.0f)
             .AppendCallback(() => _text.text = "2")

@@ -51,6 +51,14 @@ public class PlayerCharacter : Singleton<PlayerCharacter>
         }
         var next = CreateStage.StageBlocks[nextX, nextY];
         if (next.Obstacle) return;
+        if (next.BreakCount > 0)
+        {
+            next.Damage();
+            if (next.BreakCount != 0)
+            {
+                return;
+            }
+        }
         if (next.Enable) next.Disable();
         transform.DOMove(next.transform.position, 0.3f).Play();
         _positionX = nextX;
