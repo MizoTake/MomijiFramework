@@ -58,7 +58,7 @@ public class PlayGameSequence : Singleton<PlayGameSequence>
             .Where(_ => _)
             .Subscribe(_ =>
             {
-                _character = Instantiate(_playerObject, new Vector3(4, 60, 0), Quaternion.identity).GetComponent<PlayerCharacter>();
+                _character = Instantiate(_playerObject, new Vector3(4, 100, 0), Quaternion.identity).GetComponent<PlayerCharacter>();
                 _countDownText.CountDownStart.Play();
             })
             .AddTo(this);

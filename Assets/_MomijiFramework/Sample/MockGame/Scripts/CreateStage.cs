@@ -84,8 +84,7 @@ public class CreateStage : Singleton<CreateStage>
             for (var x = 0; x < _width; x++)
             {
                 var check = (Path.IndexOf(new Vector2(x, y)) == -1) ? false : true;
-                Debug.Log(Path.IndexOf(new Vector2(x, y)));
-                var block = _stageBlock[x, y] = Instantiate(_blockPrefab, new Vector3(x, (y + 1) + 20.0f, 0), Quaternion.identity).GetComponent<StageBlock>();
+                var block = _stageBlock[x, y] = Instantiate(_blockPrefab, new Vector3(x, (y + 1) + 40.0f, 0), Quaternion.identity).GetComponent<StageBlock>();
                 block.transform.SetParent(transform);
                 block.Route = check;
                 block.Setup();
