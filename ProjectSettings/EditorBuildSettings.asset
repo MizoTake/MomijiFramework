@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_MomijiFramework/Sample/Scene/MaskFade.unity
-    guid: f4f0bf12b4d95d548963d0e9ca746c39
+    path: Assets/_BaseProject/Sample/Scene/Sample.unity
+    guid: 1a67b9d0b3adff64990db79f2ef4c155

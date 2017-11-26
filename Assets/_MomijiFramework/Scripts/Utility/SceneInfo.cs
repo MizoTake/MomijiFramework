@@ -8,10 +8,10 @@ public sealed class SceneInfo
 	/// </summary>
 	public enum SceneEnum
 	{
-		MaskFade = 0
+		MomijiFramework = 0
 	};
 	/// <summary>
 	/// Access Scene Name Array
 	/// </summary>
-	public static readonly string[] SceneNames = new string[] { "MaskFade" }; 
+	public static readonly string[] SceneNames = new string[] { "MomijiFramework" }; 
 }
