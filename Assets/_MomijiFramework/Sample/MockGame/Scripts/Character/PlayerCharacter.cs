@@ -64,5 +64,4 @@ public class PlayerCharacter : Singleton<PlayerCharacter>
         _positionX = nextX;
         _positionY = nextY;
     }
-
 }

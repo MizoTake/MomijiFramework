@@ -9,6 +9,8 @@ public class CountDownText : MonoBehaviour
 
     private Text _text;
 
+    private int _count = 3;
+
     public Sequence CountDownStart;
     public Text ViewText => _text;
 
@@ -19,13 +21,15 @@ public class CountDownText : MonoBehaviour
 
         CountDownStart = DOTween.Sequence();
         CountDownStart
-            .AppendInterval(5.0f)
-            .AppendCallback(() => _text.text = "3")
-            .AppendInterval(1.0f)
-            .AppendCallback(() => _text.text = "2")
-            .AppendInterval(1.0f)
-            .AppendCallback(() => _text.text = "1")
-            .AppendInterval(1.0f)
-            .AppendCallback(() => _text.text = "Start");
+            .AppendInterval(5.0f);
+        for (var i = _count; i > 0; i--)
+        {
+            CountDownStart
+                .Append(_text.DOText(i.ToString(), 0.3f))
+                .AppendInterval(1.0f);
+        }
+        CountDownStart
+            .Append(_text.DOText("Start", 0.1f))
+            .AppendInterval(1.0f);
     }
 }

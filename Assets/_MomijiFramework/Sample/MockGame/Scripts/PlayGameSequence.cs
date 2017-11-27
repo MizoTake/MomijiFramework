@@ -41,6 +41,7 @@ public class PlayGameSequence : Singleton<PlayGameSequence>
             .EveryUpdate()
             .Where(_ => _state.Value == GameState.Title)
             .Where(_ => Input.GetMouseButtonDown(0) && !dismiss.IsPlaying())
+            .Take(1)
             .Select(_ => Input.mousePosition)
             .Subscribe(_ =>
             {
@@ -105,15 +106,7 @@ public class PlayGameSequence : Singleton<PlayGameSequence>
                         .Play();
                 })
                 .AddTo(this);
-
-        // _state.Value = GameState.Game;
     }
-
-    public void CreatePlayerCharacter()
-    {
-
-    }
-
 }
 
 public enum GameState

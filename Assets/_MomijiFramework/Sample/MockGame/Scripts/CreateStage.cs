@@ -35,9 +35,6 @@ public class CreateStage : Singleton<CreateStage>
                 StartCoroutine(InstanceBlocks());
             })
             .AddTo(this);
-
-        // TODO: Debug処理
-        // CreateStageStart.OnNext(Unit.Default);
     }
 
     private void RoutePath()
