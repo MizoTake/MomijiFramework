@@ -17,7 +17,7 @@ public class ReturnTitleButton : MonoBehaviour
         var button = GetComponent<Button>();
         button.onClick.AddListener(() =>
         {
-            TransSceneManager.ReloadScene(SceneInfo.SceneEnum.MockGame);
+            TransSceneManager.ReloadScene();
         });
 
         var image = GetComponent<Image>();

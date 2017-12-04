@@ -102,7 +102,7 @@ public class PlayGameSequence : Singleton<PlayGameSequence>
                     DOTween.Sequence()
                         .Append(_countDownText.ViewText.DOFade(0, 0.3f))
                         .AppendInterval(0.5f)
-                        .AppendCallback(() => TransSceneManager.ReloadScene(SceneInfo.SceneEnum.MockGame))
+                        .AppendCallback(() => TransSceneManager.ReloadScene())
                         .Play();
                 })
                 .AddTo(this);
