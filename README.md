@@ -7,3 +7,6 @@
 - UniRx
 - DoTween
 - ShaderForge
+
+## License
+MIT
