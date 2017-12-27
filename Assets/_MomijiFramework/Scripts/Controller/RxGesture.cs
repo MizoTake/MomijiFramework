@@ -5,69 +5,69 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class RxGesture : MonoBehaviour
+namespace Momiji
 {
-    [System.Serializable]
-    public class ClickEvent : UnityEngine.Events.UnityEvent { }
-    [SerializeField]
-    private ClickEvent _click = new ClickEvent();
-    [System.Serializable]
-    public class LfetFlickEvent : UnityEngine.Events.UnityEvent { }
-    [SerializeField]
-    private LfetFlickEvent _leftFlick = new LfetFlickEvent();
-    [System.Serializable]
-    public class RightFlickEvent : UnityEngine.Events.UnityEvent { }
-    [SerializeField]
-    private RightFlickEvent _rightFlick = new RightFlickEvent();
-    [System.Serializable]
-    public class DownFlickEvent : UnityEngine.Events.UnityEvent { }
-    [SerializeField]
-    private DownFlickEvent _downFlick = new DownFlickEvent();
-    [System.Serializable]
-    public class UpFlick : UnityEngine.Events.UnityEvent { }
-    [SerializeField]
-    private UpFlick _up = new UpFlick();
-
-    void Awake()
+    public class RxGesture : MonoBehaviour
     {
-        var start = this.UpdateAsObservable()
-            .Where(_ => Input.GetMouseButtonDown(0))
-            .Select(_ => Input.mousePosition);
-        var end = this.UpdateAsObservable()
-            .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(1)))
-            .Where(_ => Input.GetMouseButtonUp(0))
-            .Select(_ => Input.mousePosition)
-            .Take(1);
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent _click = new UnityEngine.Events.UnityEvent();
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent _leftFlick = new UnityEngine.Events.UnityEvent();
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent _rightFlick = new UnityEngine.Events.UnityEvent();
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent _downFlick = new UnityEngine.Events.UnityEvent();
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent _upFlick = new UnityEngine.Events.UnityEvent();
 
-        start.SelectMany(startPos => end.Select(endPos => startPos - endPos))
-            .Subscribe(v =>
-            {
-                if (v.magnitude < 50)
+        public UnityEngine.Events.UnityAction Click { set { _click.AddListener(() => value()); } }
+        public UnityEngine.Events.UnityAction LeftFlick { set { _leftFlick.AddListener(() => value()); } }
+        public UnityEngine.Events.UnityAction RightFlick { set { _rightFlick.AddListener(() => value()); } }
+        public UnityEngine.Events.UnityAction DownFlick { set { _downFlick.AddListener(() => value()); } }
+        public UnityEngine.Events.UnityAction UpFlick { set { _upFlick.AddListener(() => value()); } }
+
+        public override void OnStateBegin()
+        {
+            var start = this.UpdateAsObservable()
+                .Where(_ => Input.GetMouseButtonDown(0))
+                .Select(_ => Input.mousePosition);
+            var end = this.UpdateAsObservable()
+                .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(1)))
+                .Where(_ => Input.GetMouseButtonUp(0))
+                .Select(_ => Input.mousePosition)
+                .Take(1);
+
+            start.SelectMany(startPos => end.Select(endPos => startPos - endPos))
+                .Subscribe(v =>
                 {
-                    _click.Invoke();
-                }
-                else if (Math.Abs(v.x) > Mathf.Abs(v.y))
-                {
-                    if (v.x > 0)
+                    if (v.magnitude < 50)
                     {
-                        _leftFlick.Invoke();
+                        _click.Invoke();
+                    }
+                    else if (Math.Abs(v.x) > Mathf.Abs(v.y))
+                    {
+                        if (v.x > 0)
+                        {
+                            _leftFlick.Invoke();
+                        }
+                        else
+                        {
+                            _rightFlick.Invoke();
+                        }
                     }
                     else
                     {
-                        _rightFlick.Invoke();
+                        if (v.y > 0)
+                        {
+                            _downFlick.Invoke();
+                        }
+                        else
+                        {
+                            _upFlick.Invoke();
+                        }
                     }
-                }
-                else
-                {
-                    if (v.y > 0)
-                    {
-                        _downFlick.Invoke();
-                    }
-                    else
-                    {
-                        _up.Invoke();
-                    }
-                }
-            });
+                })
+                .AddTo(this);
+        }
     }
 }

@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadResources : MonoBehaviour
+namespace Momiji
 {
-
-    private const string SCRIPTABLE_DATA_PATH = "Data/";
-
-    public static ScriptableObject ScriptableObject(string fileName)
+    public class LoadResources : MonoBehaviour
     {
-        return Resources.Load(SCRIPTABLE_DATA_PATH + fileName) as ScriptableObject;
+
+        private const string SCRIPTABLE_DATA_PATH = "Data/";
+
+        public static ScriptableObject ScriptableObject(string fileName)
+        {
+            return Resources.Load(SCRIPTABLE_DATA_PATH + fileName) as ScriptableObject;
+        }
     }
 }
