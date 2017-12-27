@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using DG.Tweening;
+using Momiji;
 
 public class PlayerCharacter : Singleton<PlayerCharacter>
 {

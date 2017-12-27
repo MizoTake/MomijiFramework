@@ -26,7 +26,7 @@ namespace Momiji
         public UnityEngine.Events.UnityAction DownFlick { set { _downFlick.AddListener(() => value()); } }
         public UnityEngine.Events.UnityAction UpFlick { set { _upFlick.AddListener(() => value()); } }
 
-        public override void OnStateBegin()
+        public void Start()
         {
             var start = this.UpdateAsObservable()
                 .Where(_ => Input.GetMouseButtonDown(0))
