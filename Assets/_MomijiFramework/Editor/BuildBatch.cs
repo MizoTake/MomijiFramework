@@ -26,6 +26,7 @@ namespace Momiji
 
         private static void BuildByParameter(BuildParameter param)
         {
+
             string outputFileName = param.outputFileName;
             BuildTarget targetPlatform = param.targetPlatform;
 
