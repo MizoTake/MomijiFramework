@@ -5,36 +5,39 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine.UI;
 
-public class BaseTableView<T> : TableView<T> where T : UnityEngine.Component
+namespace Momiji
 {
-
-    public void Start()
+    public class BaseTableView<T> : TableView<T> where T : UnityEngine.Component
     {
-        _cells.Clear();
-        _pool = new Pool<T>(_cellPrefab.GetComponent<T>(), transform);
-        this.OnDestroyAsObservable().Subscribe(_ => _pool.Dispose());
-    }
 
-    public override void ReloadData()
-    {
-        _cells.ForEach((_) =>
+        public void Start()
         {
-            _pool.Return(_);
-        });
-        _cells.Clear();
-        for (int i = 0; i < CellCount(); i++)
-        {
-            var item = _pool.Rent();
-            var cell = item.GetComponent<T>();
-            TableViewCell(i, cell);
-            _cells.Add(cell);
+            _cells.Clear();
+            _pool = new Pool<T>(_cellPrefab.GetComponent<T>(), transform);
+            this.OnDestroyAsObservable().Subscribe(_ => _pool.Dispose());
         }
-    }
 
-    public override int CellCount()
-    {
-        return 0;
-    }
+        public override void ReloadData()
+        {
+            _cells.ForEach((_) =>
+            {
+                _pool.Return(_);
+            });
+            _cells.Clear();
+            for (int i = 0; i < CellCount(); i++)
+            {
+                var item = _pool.Rent();
+                var cell = item.GetComponent<T>();
+                TableViewCell(i, cell);
+                _cells.Add(cell);
+            }
+        }
 
-    public override void TableViewCell(int index, T cell) { }
+        public override int CellCount()
+        {
+            return 0;
+        }
+
+        public override void TableViewCell(int index, T cell) { }
+    }
 }

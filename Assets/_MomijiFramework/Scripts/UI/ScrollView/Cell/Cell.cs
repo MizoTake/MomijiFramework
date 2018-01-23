@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Cell<T> : MonoBehaviour where T : CellParameter
+
+namespace Momiji
 {
-    public T Param;
+    public abstract class Cell<T> : MonoBehaviour where T : CellParameter
+    {
+        public T Param;
 
-    public abstract void Config(T param);
+        public abstract void Config(T param);
+    }
+
+    public abstract class CellParameter { }
 }
-
-public abstract class CellParameter { }

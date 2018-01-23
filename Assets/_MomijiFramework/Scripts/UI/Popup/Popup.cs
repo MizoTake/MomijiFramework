@@ -5,75 +5,78 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UniRx;
 
-public class Popup : BasePopupView
+namespace Momiji
 {
-
-    [SerializeField]
-    private GameObject _single;
-    [SerializeField]
-    private GameObject _double;
-    [SerializeField]
-    private Button _singleButton;
-    [SerializeField]
-    private Button _leftButton;
-    [SerializeField]
-    private Button _rightButton;
-    [SerializeField]
-    private InputField _field;
-
-    public bool InputFieldEnabled { set { _field.enabled = value; } }
-
-    void Start()
+    public class Popup : BasePopupView
     {
-        SelectButton(PopupSelect.Dismiss);
 
-        _leftButton.interactable = false;
-        _field.onValueChange
-            .AsObservable()
-            .Select(_ => _.Length != 0)
-            .Subscribe(_ =>
-            {
-                _leftButton.interactable = _;
-            })
-            .AddTo(this);
-    }
+        [SerializeField]
+        private GameObject _single;
+        [SerializeField]
+        private GameObject _double;
+        [SerializeField]
+        private Button _singleButton;
+        [SerializeField]
+        private Button _leftButton;
+        [SerializeField]
+        private Button _rightButton;
+        [SerializeField]
+        private InputField _field;
 
-    public void Show(string message, System.Action single)
-    {
-        ShowProcess(message, PopupSelect.Single);
-        _singleButton.onClick.AsObservable()
-            .Take(1)
-            .Subscribe(_ => single())
-            .AddTo(this);
-    }
+        public bool InputFieldEnabled { set { _field.enabled = value; } }
 
-    public void Show(string message, System.Action leftAction, System.Action rightAction)
-    {
-        ShowProcess(message, PopupSelect.Double);
-        _leftButton.onClick.AsObservable()
-            .Take(1)
-            .Subscribe(_ => leftAction())
-            .AddTo(this);
-        _rightButton.onClick.AsObservable()
-            .Take(1)
-            .Subscribe(_ => rightAction())
-            .AddTo(this);
-    }
-
-    public override void SelectButton(PopupSelect select, bool active = false)
-    {
-        switch (select)
+        void Start()
         {
-            case PopupSelect.Dismiss:
-                _single.SetActive(active);
-                _double.SetActive(active);
-                break;
-            case PopupSelect.Single:
-                _single.SetActive(active);
-                break;
-            case PopupSelect.Double:
-                _double.SetActive(active);
-                break;
+            SelectButton(PopupSelect.Dismiss);
+
+            _leftButton.interactable = false;
+            _field.onValueChange
+                .AsObservable()
+                .Select(_ => _.Length != 0)
+                .Subscribe(_ =>
+                {
+                    _leftButton.interactable = _;
+                })
+                .AddTo(this);
+        }
+
+        public void Show(string message, System.Action single)
+        {
+            ShowProcess(message, PopupSelect.Single);
+            _singleButton.onClick.AsObservable()
+                .Take(1)
+                .Subscribe(_ => single())
+                .AddTo(this);
+        }
+
+        public void Show(string message, System.Action leftAction, System.Action rightAction)
+        {
+            ShowProcess(message, PopupSelect.Double);
+            _leftButton.onClick.AsObservable()
+                .Take(1)
+                .Subscribe(_ => leftAction())
+                .AddTo(this);
+            _rightButton.onClick.AsObservable()
+                .Take(1)
+                .Subscribe(_ => rightAction())
+                .AddTo(this);
+        }
+
+        public override void SelectButton(PopupSelect select, bool active = false)
+        {
+            switch (select)
+            {
+                case PopupSelect.Dismiss:
+                    _single.SetActive(active);
+                    _double.SetActive(active);
+                    break;
+                case PopupSelect.Single:
+                    _single.SetActive(active);
+                    break;
+                case PopupSelect.Double:
+                    _double.SetActive(active);
+                    break;
+            }
         }
     }
 }
