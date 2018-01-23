@@ -6,7 +6,6 @@
 ## Use Assets
 - UniRx
 - DoTween
-- ShaderForge (必須ではない)
 
 ## License
 MIT
