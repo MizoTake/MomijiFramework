@@ -8,7 +8,9 @@
 
 ## Setup
 
-> git submodule add https://github.com/MizoTake/MomijiFramework.git
+```
+git submodule add https://github.com/MizoTake/MomijiFramework.git
+```
 
 ## License
 MIT
