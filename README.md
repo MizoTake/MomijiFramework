@@ -6,7 +6,6 @@
 ## Use Assets
 - UniRx
 - DoTween
-- ShaderForge (必須ではない) - 2018からのノードベースのシェーダーに置き換える予定
 
 ## License
 MIT
