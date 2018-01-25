@@ -6,26 +6,29 @@ using UniRx;
 using DG.Tweening;
 using Momiji;
 
-public class TimeManager : Singleton<TimeManager>
+namespace Momiji
 {
-    [SerializeField]
-    private CountDownText _countDownText;
-
-    private float _timer = 0.0f;
-
-    public static float Timer => Instance._timer;
-
-    // Use this for initialization
-    void Start()
+    public class TimeManager : Singleton<TimeManager>
     {
-        Observable
-            .EveryUpdate()
-            .Where(_ => PlayGameSequence.State.Value == GameState.Game && _countDownText.CountDownStart.IsComplete())
-            .Subscribe(_ =>
-            {
-                _timer += Time.deltaTime;
-                _countDownText.ViewText.text = "Time: " + Mathf.Round(_timer).ToString();
-            })
-            .AddTo(this);
+        [SerializeField]
+        private CountDownText _countDownText;
+
+        private float _timer = 0.0f;
+
+        public static float Timer => Instance._timer;
+
+        // Use this for initialization
+        void Start()
+        {
+            Observable
+                .EveryUpdate()
+                .Where(_ => PlayGameSequence.State.Value == GameState.Game && _countDownText.CountDownStart.IsComplete())
+                .Subscribe(_ =>
+                {
+                    _timer += Time.deltaTime;
+                    _countDownText.ViewText.text = "Time: " + Mathf.Round(_timer).ToString();
+                })
+                .AddTo(this);
+        }
     }
 }

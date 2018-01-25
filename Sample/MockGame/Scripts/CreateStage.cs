@@ -4,91 +4,94 @@ using UnityEngine;
 using UniRx;
 using Momiji;
 
-public class CreateStage : Singleton<CreateStage>
+namespace Momiji
 {
-
-    [SerializeField]
-    private int _width;
-    [SerializeField]
-    private int _height;
-    [SerializeField]
-    private StageBlock _blockPrefab;
-
-    private StageBlock[,] _stageBlock;
-
-    public static Subject<Unit> CreateStageStart = new Subject<Unit>();
-    public static ReactiveProperty<bool> FinishCreateStage = new ReactiveProperty<bool>(false);
-    public static int Width => Instance._width;
-    public static int Height => Instance._height;
-    public static StageBlock[,] StageBlocks => Instance._stageBlock;
-    public static List<Vector2> Path = new List<Vector2>();
-
-    // Use this for initialization
-    void Start()
+    public class CreateStage : Singleton<CreateStage>
     {
-        _stageBlock = new StageBlock[_width, _height];
-        RoutePath();
 
-        CreateStageStart
-            .Take(1)
-            .Subscribe(_ =>
-            {
-                StartCoroutine(InstanceBlocks());
-            })
-            .AddTo(this);
-    }
+        [SerializeField]
+        private int _width;
+        [SerializeField]
+        private int _height;
+        [SerializeField]
+        private StageBlock _blockPrefab;
 
-    private void RoutePath()
-    {
-        Path.Add(new Vector2(_width / 2, _height - 1));
-        int cnt = 0;
-        while (true)
+        private StageBlock[,] _stageBlock;
+
+        public static Subject<Unit> CreateStageStart = new Subject<Unit>();
+        public static ReactiveProperty<bool> FinishCreateStage = new ReactiveProperty<bool>(false);
+        public static int Width => Instance._width;
+        public static int Height => Instance._height;
+        public static StageBlock[,] StageBlocks => Instance._stageBlock;
+        public static List<Vector2> Path = new List<Vector2>();
+
+        // Use this for initialization
+        void Start()
         {
-            switch (Random.Range(0, 3))
-            {
-                case 0:
-                    if (Path[cnt].x - 1 < 0) continue;
-                    Path.Add(new Vector2(Path[cnt].x - 1, Path[cnt].y));
-                    break;
-                case 1:
-                    Path.Add(new Vector2(Path[cnt].x, Path[cnt].y - 1));
-                    break;
-                case 2:
-                    if (Path[cnt].x - 1 > _width) continue;
-                    Path.Add(new Vector2(Path[cnt].x + 1, Path[cnt].y));
-                    break;
-            }
-            if (Path[cnt].y == 0) break;
-            cnt += 1;
+            _stageBlock = new StageBlock[_width, _height];
+            RoutePath();
+
+            CreateStageStart
+                .Take(1)
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(InstanceBlocks());
+                })
+                .AddTo(this);
         }
-    }
 
-    public static void RemoveRigidBody()
-    {
-        for (var y = 0; y < Instance._height; y++)
+        private void RoutePath()
         {
-            for (var x = 0; x < Instance._width; x++)
+            Path.Add(new Vector2(_width / 2, _height - 1));
+            int cnt = 0;
+            while (true)
             {
-                Destroy(Instance._stageBlock[x, y].GetComponent<Rigidbody>());
-            }
-        }
-    }
-
-    IEnumerator InstanceBlocks()
-    {
-        var cnt = 0;
-        for (var y = 0; y < _height; y++)
-        {
-            for (var x = 0; x < _width; x++)
-            {
-                var check = (Path.IndexOf(new Vector2(x, y)) == -1) ? false : true;
-                var block = _stageBlock[x, y] = Instantiate(_blockPrefab, new Vector3(x, (y + 1) + 30.0f, 0), Quaternion.identity).GetComponent<StageBlock>();
-                block.transform.SetParent(transform);
-                block.Setup(check);
+                switch (Random.Range(0, 3))
+                {
+                    case 0:
+                        if (Path[cnt].x - 1 < 0) continue;
+                        Path.Add(new Vector2(Path[cnt].x - 1, Path[cnt].y));
+                        break;
+                    case 1:
+                        Path.Add(new Vector2(Path[cnt].x, Path[cnt].y - 1));
+                        break;
+                    case 2:
+                        if (Path[cnt].x - 1 > _width) continue;
+                        Path.Add(new Vector2(Path[cnt].x + 1, Path[cnt].y));
+                        break;
+                }
+                if (Path[cnt].y == 0) break;
                 cnt += 1;
             }
-            if (y % 2 == 0) yield return new WaitForSeconds(0.1f);
         }
-        FinishCreateStage.Value = true;
+
+        public static void RemoveRigidBody()
+        {
+            for (var y = 0; y < Instance._height; y++)
+            {
+                for (var x = 0; x < Instance._width; x++)
+                {
+                    Destroy(Instance._stageBlock[x, y].GetComponent<Rigidbody>());
+                }
+            }
+        }
+
+        IEnumerator InstanceBlocks()
+        {
+            var cnt = 0;
+            for (var y = 0; y < _height; y++)
+            {
+                for (var x = 0; x < _width; x++)
+                {
+                    var check = (Path.IndexOf(new Vector2(x, y)) == -1) ? false : true;
+                    var block = _stageBlock[x, y] = Instantiate(_blockPrefab, new Vector3(x, (y + 1) + 30.0f, 0), Quaternion.identity).GetComponent<StageBlock>();
+                    block.transform.SetParent(transform);
+                    block.Setup(check);
+                    cnt += 1;
+                }
+                if (y % 2 == 0) yield return new WaitForSeconds(0.1f);
+            }
+            FinishCreateStage.Value = true;
+        }
     }
 }
