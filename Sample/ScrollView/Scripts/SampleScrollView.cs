@@ -8,7 +8,7 @@ public class SampleScrollView : TableView<SampleCell>
 
     void Start()
     {
-        this.Init();
+        this.Init(snap: true);
         this.ReloadData();
     }
 
