@@ -7,8 +7,9 @@ namespace Momiji
     public static class VectorExtension
     {
 
-        public static Vector3 EnumToNormalize(this Vector selectNor)
+        public static Vector3 EnumToNormalize(this Vector selectNor, bool random = false)
         {
+            if (random) { }
             switch (selectNor)
             {
                 case Vector.Up:

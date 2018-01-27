@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Momiji;
 
-public class SampleScrollView : BaseTableView<SampleCell>
+public class SampleScrollView : TableView<SampleCell>
 {
 
     void Start()
     {
-        base.Start();
-        ReloadData();
+        this.Init();
+        this.ReloadData();
     }
 
     public override int CellCount()

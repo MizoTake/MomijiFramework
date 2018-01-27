@@ -28,5 +28,9 @@ public class TagName
 	/// return "GameController"
 	/// </summary>
 	public static string @GameController = "GameController";
-	public static readonly string[] TAGS = new string[] { "Untagged", "Respawn", "Finish", "EditorOnly", "MainCamera", "Player", "GameController", };
+	/// <summary>
+	/// return "NavMeshSourceTag"
+	/// </summary>
+	public static string @NavMeshSourceTag = "NavMeshSourceTag";
+	public static readonly string[] TAGS = new string[] { "Untagged", "Respawn", "Finish", "EditorOnly", "MainCamera", "Player", "GameController", "NavMeshSourceTag", };
 }
