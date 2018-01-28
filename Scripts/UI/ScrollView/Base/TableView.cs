@@ -58,15 +58,11 @@ namespace Momiji
                 .Select(_ => Mathf.Sign(_.delta.y))
                 .Subscribe(_ =>
                 {
-                    cellIndex += (int)_;
-                    if (cellIndex < 0) cellIndex = 0;
-                    if (cellIndex > tableView.CellCount()) cellIndex = tableView.CellCount() - 1;
-
+                    cellIndex = Mathf.Clamp(cellIndex + (int)_, 0, tableView.CellCount() - 1);
                     DOTween.To(() => scrollRect.verticalScrollbar.value,
                         value => scrollRect.verticalScrollbar.value = value,
                         cellPer * (float)(tableView.CellCount() - cellIndex - 1), 0.3f)
                         .Play();
-                    Debug.Log(cellIndex);
                 })
                 .AddTo(tableView);
         }
