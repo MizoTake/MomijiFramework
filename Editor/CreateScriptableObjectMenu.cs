@@ -1,33 +1,30 @@
-﻿namespace Momiji
+﻿using UnityEngine;
+using UnityEditor;
+
+public static class CreateScriptableObjectMenu
 {
-    using UnityEngine;
-    using UnityEditor;
+    const string MENU_TEXT = "Assets/Create/ScriptableObject";
 
-    public static class CreateScriptableObjectMenu
+    [MenuItem(MENU_TEXT, false, 0)]
+    static void CreateAsset()
     {
-        const string MENU_TEXT = "Assets/Create/ScriptableObject";
+        var script = Selection.activeObject as MonoScript;
+        string path = AssetDatabase.GetAssetPath(script);
+        Create(script.GetClass(), path.Substring(0, path.Length - 3) + ".asset");
+    }
 
-        [MenuItem(MENU_TEXT, false, 0)]
-        static void CreateAsset()
-        {
-            var script = Selection.activeObject as MonoScript;
-            string path = AssetDatabase.GetAssetPath(script);
-            Create(script.GetClass(), path.Substring(0, path.Length - 3) + ".asset");
-        }
+    static void Create(System.Type type, string path)
+    {
+        ProjectWindowUtil.CreateAsset(ScriptableObject.CreateInstance(type), path);
+    }
 
-        static void Create(System.Type type, string path)
-        {
-            ProjectWindowUtil.CreateAsset(ScriptableObject.CreateInstance(type), path);
-        }
+    [MenuItem(MENU_TEXT, true)]
+    static bool ValidateCreateAsset()
+    {
+        var script = Selection.activeObject as MonoScript;
+        if (script == null) { return false; }
 
-        [MenuItem(MENU_TEXT, true)]
-        static bool ValidateCreateAsset()
-        {
-            var script = Selection.activeObject as MonoScript;
-            if (script == null) { return false; }
-
-            // 選択しているスクリプトがScriptableObjectかどうか
-            return script.GetClass().IsSubclassOf(typeof(ScriptableObject));
-        }
+        // 選択しているスクリプトがScriptableObjectかどうか
+        return script.GetClass().IsSubclassOf(typeof(ScriptableObject));
     }
 }
