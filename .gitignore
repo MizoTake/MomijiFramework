@@ -41,6 +41,8 @@ Demigiant
 *.code-workspace
 *.meta
 
+#MomijiFramework
+USE_ASSETS_LICENSE
 **/Resources/Data/SoundParameter.asset
 **/Scripts/Utility/SceneInfo.cs
 **/Scripts/Utility/AudioEnums.cs
