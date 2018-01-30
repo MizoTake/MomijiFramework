@@ -14,6 +14,7 @@ namespace Momiji
     {
 
         private const string USE_LICENSE_FILE = "used_license_file";
+        private const string fileName = "USE_LICENSE";
 
         [MenuItem("Assets/Create/Used LICENSE File")]
         static void CreateUsedLICENSEFile()
@@ -21,7 +22,7 @@ namespace Momiji
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
             string[] files;
-            string assetPath = Application.dataPath + "/USE_LICENSE";
+            string assetPath = Application.dataPath + "/" + fileName;
 
             AssetDatabase.MoveAssetToTrash(assetPath);
 
@@ -29,7 +30,7 @@ namespace Momiji
             foreach (var guid in files)
             {
                 if (Path.GetFileName((AssetDatabase.GUIDToAssetPath(guid))) == "CreateUseLicenseFile.cs" ||
-                    Path.GetFileName((AssetDatabase.GUIDToAssetPath(guid))) == "USE_LICENSE") continue;
+                    Path.GetFileName((AssetDatabase.GUIDToAssetPath(guid))) == fileName) continue;
                 var path = AssetDatabase.GUIDToAssetPath(guid).Substring("Assets".Length);
                 StreamReader reader = new StreamReader(Application.dataPath + path);
                 builder.Append(reader.ReadToEnd());
