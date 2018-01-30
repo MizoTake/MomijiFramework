@@ -13,8 +13,8 @@ namespace Momiji
     public static class CreateUseLicenseFile
     {
 
-        private const string USE_LICENSE_FILE = "used_license_file";
-        private const string fileName = "USE_LICENSE";
+        private const string USE_LICENSE_FILE = "use_assets_license_file";
+        private const string fileName = "USE_Assets_LICENSE";
 
         [MenuItem("Assets/Create/Used LICENSE File")]
         static void CreateUsedLICENSEFile()
@@ -34,7 +34,7 @@ namespace Momiji
                 var path = AssetDatabase.GUIDToAssetPath(guid).Substring("Assets".Length);
                 StreamReader reader = new StreamReader(Application.dataPath + path);
                 builder.Append(reader.ReadToEnd());
-                builder.Append("\t").Append("\t");
+                builder.AppendLine().AppendLine();
                 reader.Close();
             }
 
