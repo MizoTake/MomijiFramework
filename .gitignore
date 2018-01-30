@@ -40,3 +40,9 @@ Demigiant
 **/UniRx
 *.code-workspace
 *.meta
+
+**/Resources/Data/SoundParameter.asset
+**/Scripts/Utility/SceneInfo.cs
+**/Scripts/Utility/AudioEnums.cs
+**/Scripts/Utility/LayerEnum.cs
+**/Scripts/Utility/TagName.cs
