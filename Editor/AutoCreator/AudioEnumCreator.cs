@@ -59,9 +59,9 @@ namespace Momiji
         static void WriteAudioScript(System.Text.StringBuilder builder)
         {
             SoundParameter source = LoadResources.ScriptableObject("SoundParameter") as SoundParameter;
-            WriteAudioEnum(builder, source.BGMClip, SoundType.BGM);
-            WriteAudioEnum(builder, source.SEClip, SoundType.SE);
-            WriteAudioEnum(builder, source.VoiceClip, SoundType.Voice);
+            WriteAudioEnum(builder, source?.BGMClip ?? new AudioClip[0], SoundType.BGM);
+            WriteAudioEnum(builder, source?.SEClip ?? new AudioClip[0], SoundType.SE);
+            WriteAudioEnum(builder, source?.VoiceClip ?? new AudioClip[0], SoundType.Voice);
         }
 
         static void WriteAudioEnum(System.Text.StringBuilder builder, AudioClip[] audioNames, SoundType type)
