@@ -41,6 +41,8 @@ namespace Momiji
             string text = builder.ToString().Replace(",}", "}");
             string assetPath = Application.dataPath + EditorExtensionConst.SAVE_FILE_POINT + "SceneInfo.cs";
 
+            Directory.CreateDirectory(Application.dataPath + EditorExtensionConst.SAVE_FILE_POINT);
+
             if (AssetDatabase.LoadAssetAtPath(assetPath.Replace("/Editor/..", ""), typeof(UnityEngine.Object)) != null && EditorPrefs.GetInt(SCENE_ENUM_HASH_KEY, 0) == text.GetHashCode())
                 return;
 

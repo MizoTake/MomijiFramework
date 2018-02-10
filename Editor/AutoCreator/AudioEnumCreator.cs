@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System.IO;
 using UnityEditorInternal;
 using System.Collections.Generic;
 using System;
@@ -37,6 +38,8 @@ namespace Momiji
 
             string text = builder.ToString().Replace(",}", "}");
             string assetPath = Application.dataPath + EditorExtensionConst.SAVE_FILE_POINT + "AudioEnums.cs";
+
+            Directory.CreateDirectory(Application.dataPath + EditorExtensionConst.SAVE_FILE_POINT);
 
             if (AssetDatabase.LoadAssetAtPath(assetPath.Replace("/Editor/..", ""), typeof(UnityEngine.Object)) != null && EditorPrefs.GetInt(AUDIO_ENUM_HASH_KEY, 0) == text.GetHashCode())
                 return;

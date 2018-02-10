@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditorInternal;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace Momiji
 {
@@ -37,6 +38,8 @@ namespace Momiji
 
             string text = builder.ToString().Replace(",}", "}");
             string assetPath = Application.dataPath + EditorExtensionConst.SAVE_FILE_POINT + "TagName.cs";
+
+            Directory.CreateDirectory(Application.dataPath + EditorExtensionConst.SAVE_FILE_POINT);
 
             if (AssetDatabase.LoadAssetAtPath(assetPath.Replace("/Editor/..", ""), typeof(UnityEngine.Object)) != null && EditorPrefs.GetInt(TAGNAME_HASH_KEY, 0) == text.GetHashCode())
                 return;

@@ -12,6 +12,7 @@ namespace Momiji
     {
         [SerializeField]
         private GameObject _cellPrefab;
+        public ReactiveProperty<int> SnapIndex = new ReactiveProperty<int>(0);
         public GameObject CellPrefab { get { return _cellPrefab; } }
         public Pool<T> Pool { get; set; }
         public List<T> Cells { get; protected set; } = new List<T>();
@@ -22,9 +23,10 @@ namespace Momiji
 
     public static class TableViewExtension
     {
-        public static void Init<T>(this TableView<T> tableView, bool snap = false) where T : UnityEngine.Component
+        public static void Init<T>(this TableView<T> tableView, bool snapY = false, bool snapX = false) where T : UnityEngine.Component
         {
-            if (snap) tableView.Snap();
+            if (snapX) tableView.SnapX();
+            if (snapY) tableView.SnapY();
             tableView.Cells.Clear();
             tableView.Pool = new Pool<T>(tableView.CellPrefab.GetComponent<T>(), tableView.transform);
             tableView.OnDestroyAsObservable().Subscribe(_ => tableView.Pool.Dispose());
@@ -46,9 +48,41 @@ namespace Momiji
             }
         }
 
-        public static void Snap<T>(this TableView<T> tableView) where T : UnityEngine.Component
+        public static void SnapX<T>(this TableView<T> tableView) where T : UnityEngine.Component
         {
-            var cellIndex = 0;
+            tableView.SnapIndex.Value = tableView.CellCount() - 1;
+            var scrollRect = tableView.transform.parent.parent.GetComponent<ScrollRect>();
+            var cellRectTrans = tableView.CellPrefab.transform.GetComponent<RectTransform>();
+            var tableViewWidth = cellRectTrans.sizeDelta.x * (tableView.CellCount() - 1);
+            var cellPer = cellRectTrans.sizeDelta.x / tableViewWidth;
+            scrollRect.OnEndDragAsObservable()
+                .Where(_ => Mathf.Abs(_.delta.x) > 1.0f)
+                .Select(_ => Mathf.Sign(_.delta.x))
+                .Subscribe(distance =>
+                {
+                    tableView.SnapIndex.Value = Mathf.Clamp(tableView.SnapIndex.Value + (int)distance, 0, tableView.CellCount() - 1);
+                    DOTween.To(() => scrollRect.horizontalScrollbar.value,
+                        value => scrollRect.horizontalScrollbar.value = value,
+                        cellPer * (float)(tableView.CellCount() - tableView.SnapIndex.Value - 1), 0.3f)
+                        .Play();
+                })
+                .AddTo(tableView);
+
+            scrollRect.OnEndDragAsObservable()
+                .Where(_ => Mathf.Abs(_.delta.x) <= 1.0f)
+                .Subscribe(_ =>
+                {
+                    DOTween.To(() => scrollRect.horizontalScrollbar.value,
+                        value => scrollRect.horizontalScrollbar.value = value,
+                        cellPer * (float)(tableView.CellCount() - tableView.SnapIndex.Value - 1), 0.3f)
+                        .Play();
+                })
+                .AddTo(tableView);
+        }
+
+        public static void SnapY<T>(this TableView<T> tableView) where T : UnityEngine.Component
+        {
+            tableView.SnapIndex.Value = 0;
             var scrollRect = tableView.transform.parent.parent.GetComponent<ScrollRect>();
             var cellRectTrans = tableView.CellPrefab.transform.GetComponent<RectTransform>();
             var tableViewHeight = cellRectTrans.sizeDelta.y * (tableView.CellCount() - 1);
@@ -56,12 +90,23 @@ namespace Momiji
             scrollRect.OnEndDragAsObservable()
                 .Where(_ => Mathf.Abs(_.delta.y) > 1.0f)
                 .Select(_ => Mathf.Sign(_.delta.y))
-                .Subscribe(_ =>
+                .Subscribe(distance =>
                 {
-                    cellIndex = Mathf.Clamp(cellIndex + (int)_, 0, tableView.CellCount() - 1);
+                    tableView.SnapIndex.Value = Mathf.Clamp(tableView.SnapIndex.Value + (int)distance, 0, tableView.CellCount() - 1);
                     DOTween.To(() => scrollRect.verticalScrollbar.value,
                         value => scrollRect.verticalScrollbar.value = value,
-                        cellPer * (float)(tableView.CellCount() - cellIndex - 1), 0.3f)
+                        cellPer * (float)(tableView.CellCount() - tableView.SnapIndex.Value - 1), 0.3f)
+                        .Play();
+                })
+                .AddTo(tableView);
+
+            scrollRect.OnEndDragAsObservable()
+                .Where(_ => Mathf.Abs(_.delta.y) <= 1.0f)
+                .Subscribe(_ =>
+                {
+                    DOTween.To(() => scrollRect.verticalScrollbar.value,
+                        value => scrollRect.verticalScrollbar.value = value,
+                        cellPer * (float)(tableView.CellCount() - tableView.SnapIndex.Value - 1), 0.3f)
                         .Play();
                 })
                 .AddTo(tableView);
