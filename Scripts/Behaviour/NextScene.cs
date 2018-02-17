@@ -7,9 +7,17 @@ public class NextScene : MonoBehaviour
 {
 
     public SceneInfo.SceneEnum to;
+    public bool add = false;
 
     public void Next()
     {
-        TransSceneManager.LoadScene(to);
+        if (add)
+        {
+            TransSceneManager.LoadAddScene(to);
+        }
+        else
+        {
+            TransSceneManager.LoadScene(to);
+        }
     }
 }
