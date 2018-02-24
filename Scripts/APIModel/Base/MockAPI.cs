@@ -25,7 +25,7 @@ namespace Momiji
 #elif UNITY_ANDROID
                 return "jar:file://" + Application.dataPath + "!/assets" + DIRECTORY_NAME;
 #else
-            return Application.streamingAssetsPath + DIRECTORY_NAME;
+                return Application.streamingAssetsPath + DIRECTORY_NAME;
 #endif
             }
         }
@@ -49,8 +49,8 @@ namespace Momiji
 #if UNITY_ANDROID || UNITY_IPHONE
             var path = data.request.url;
 #else
-        // http://localhost を削除
-        var path = data.request.url.Remove(0, 16);
+            // http://localhost を削除
+            var path = data.request.url.Remove(0, 16);
 #endif
             Debug.Log("reading json file: " + path);
 
@@ -60,10 +60,10 @@ namespace Momiji
             string text = reader.text;
             if (HasBomWithText(reader.bytes)) text = GetDeletedBomText(reader.text);
 #else
-        StreamReader reader = new StreamReader(path, Encoding.Default);
-        yield return new WaitForSeconds(1.0f);
-        // UTF8文字列として取得する
-        string text = reader.ReadToEnd();
+            StreamReader reader = new StreamReader(path, Encoding.Default);
+            yield return new WaitForSeconds(1.0f);
+            // UTF8文字列として取得する
+            string text = reader.ReadToEnd();
 #endif
             using (TextReader stream = new StringReader(text))
             {
@@ -89,55 +89,6 @@ namespace Momiji
         static string GetDeletedBomText(string text)
         {
             return text.Remove(0, 1);
-        }
-
-        /// <summary>
-        /// リクエストデータ
-        /// </summary>
-        public class RequestData<T>
-        {
-            /// <summary>
-            /// リクエスト
-            /// </summary>
-            public UnityWebRequest request;
-
-            /// <summary>
-            /// レスポンス
-            /// </summary>
-            public T response;
-
-            public string error;
-
-            /// <summary>
-            /// レスポンス受け取り通知
-            /// </summary>
-            public Action<T> onComplete;
-
-            /// <summary>
-            /// エラー通知
-            /// </summary>
-            public Action<string> onError;
-
-            public RequestData(UnityWebRequest request)
-            {
-                this.request = request;
-            }
-
-            public void OnComplete()
-            {
-                if (onComplete != null)
-                {
-                    onComplete(response);
-                }
-            }
-
-            public void OnError()
-            {
-                if (onError != null)
-                {
-                    onError(error);
-                }
-            }
         }
     }
 }
