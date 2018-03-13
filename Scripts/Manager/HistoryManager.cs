@@ -8,9 +8,9 @@ public class HistoryManager<T>
     Stack<T> undoStack = new Stack<T>();
     Stack<T> redoStack = new Stack<T>();
 
-    public void Stack(T command)
+    public void Stack(T data)
     {
-        undoStack.Push(command);
+        undoStack.Push(data);
         redoStack.Clear();
     }
 
@@ -23,22 +23,16 @@ public class HistoryManager<T>
 
     public T Undo()
     {
-        if (undoStack.Count == 0)
-            return default(T);
-
-        var command = undoStack.Pop();
-        redoStack.Push(command);
-        return command;
+        var data = undoStack.Pop();
+        redoStack.Push(data);
+        return data;
     }
 
     public T Redo()
     {
-        if (redoStack.Count == 0)
-            return default(T);
-
-        var command = redoStack.Pop();
-        undoStack.Push(command);
-        return command;
+        var data = redoStack.Pop();
+        undoStack.Push(data);
+        return data;
     }
 
     public bool CanUndo()
