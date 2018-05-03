@@ -1,6 +1,6 @@
 # Momiji Framework
 
-## Developed Unity2017.3.0
+## Developed Unity2018.x
 
 ## Use Assets
 - UniRx
