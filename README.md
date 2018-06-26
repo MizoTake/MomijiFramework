@@ -1,10 +1,9 @@
 # Momiji Framework
 
-## Developed Unity2017.3.0
-
 ## Use Assets
 - UniRx
 - DoTween
+- Zenject
 
 ## Setup
 

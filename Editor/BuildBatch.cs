@@ -47,7 +47,7 @@ namespace Momiji
                     outputFileName,
                     targetPlatform,
                     BuildOptions.None
-            );
+            ).ToString();
 
             // 結果出力
             if (!string.IsNullOrEmpty(errorMessage))
