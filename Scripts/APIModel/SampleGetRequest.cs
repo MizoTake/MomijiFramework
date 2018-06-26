@@ -5,7 +5,11 @@ using UnityEngine;
 
 namespace Momiji
 {
-	public class SampleMockRequest : MockRequestable, IMockSendRequest, ISampleRequest
+	interface ISampleRequest
+	{
+		void Get ();
+	}
+	public class SampleGetRequest : Requestable, ISampleRequest, ISendRequest
 	{
 		public Requestable Request => this;
 		public void Get () => this.Send ();

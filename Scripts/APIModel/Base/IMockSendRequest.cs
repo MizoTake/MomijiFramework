@@ -16,7 +16,7 @@ namespace Momiji
 	{
 		static async Task Send (this IMockSendRequest send) => await SendAsync (send);
 
-		private static async Task SendAsync (this IMockSendRequest send, bool array = false)
+		private static async Task SendAsync (this IMockSendRequest send)
 		{
 #if UNITY_ANDROID || UNITY_IPHONE
 			var path = send.Request.data.url;
@@ -42,7 +42,7 @@ namespace Momiji
 			using (TextReader stream = new StringReader (text))
 			{
 				text = stream.ReadToEnd ();
-				if (array)
+				if (send.Request.array)
 				{
 					// Responseで指定した配列で取得する(Default: model)
 					text = "{ \"" + send.Request.arrayName + "\": " + text + "}";

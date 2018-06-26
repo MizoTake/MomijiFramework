@@ -9,7 +9,7 @@ namespace Momiji
 	{
 		private readonly string DIRECTORY_NAME = "/MockAPI/";
 
-		new string HostName
+		protected new string HostName
 		{
 			get
 			{

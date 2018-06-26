@@ -10,17 +10,13 @@ namespace Momiji
 	public interface ISendRequest
 	{
 		Requestable Request { get; }
-		bool ArrayResponse { get; }
-		Task Send ();
 	}
 
 	public static class ISendRequestExtensions
 	{
-		static async Task Send (this ISendRequest send) => await SendAsync (send);
+		public static Task Send (this ISendRequest send) => SendAsync (send);
 
-		static bool ArrayResponse { get; } = false;
-
-		static async Task SendAsync (this ISendRequest send, bool array = false)
+		static async Task SendAsync (this ISendRequest send)
 		{
 			Debug.Log ("calling api: " + send.Request.data.url);
 			await send.Request.data.SendWebRequest ();
@@ -36,7 +32,7 @@ namespace Momiji
 			{
 				// UTF8文字列として取得する
 				string text = send.Request.data.downloadHandler.text;
-				if (array)
+				if (send.Request.array)
 				{
 					// Responseで指定した配列で取得する(Default: model)
 					text = "{ \"" + send.Request.arrayName + "\": " + text + "}";

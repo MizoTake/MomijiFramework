@@ -12,6 +12,7 @@ namespace Momiji
         public UnityWebRequest data;
         public IResponsible response;
         public string arrayName = "model";
+        public bool array = false;
         public string json;
         public string error;
         public Action<IResponsible> onComplete;
