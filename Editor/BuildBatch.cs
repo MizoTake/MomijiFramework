@@ -1,22 +1,18 @@
-﻿using UnityEditor;
-using UnityEngine;
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
-namespace Momiji
-{
+namespace Momiji {
     //jenkinsで呼ぶとき： -quit -batchmode -executeMethod BuildBatch.使うメソッド
 
-    public class BuildBatch
-    {
-        private struct BuildParameter
-        {
+    public class BuildBatch {
+        private struct BuildParameter {
             public string outputFileName;
             public BuildTarget targetPlatform;
-            public BuildParameter(string outputFileName, BuildTarget targetPlatform)
-            {
+            public BuildParameter (string outputFileName, BuildTarget targetPlatform) {
                 this.outputFileName = outputFileName;
                 this.targetPlatform = targetPlatform;
             }
@@ -24,18 +20,15 @@ namespace Momiji
 
         private static string outputDirectory = "";
 
-        private static void BuildByParameter(BuildParameter param)
-        {
+        private static void BuildByParameter (BuildParameter param) {
 
             string outputFileName = param.outputFileName;
             BuildTarget targetPlatform = param.targetPlatform;
 
-            List<string> allScene = new List<string>();
-            foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
-            {
-                if (scene.enabled)
-                {
-                    allScene.Add(scene.path);
+            List<string> allScene = new List<string> ();
+            foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
+                if (scene.enabled) {
+                    allScene.Add (scene.path);
                 }
             }
 
@@ -50,32 +43,30 @@ namespace Momiji
             ).ToString();
 
             // 結果出力
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                Debug.LogError("Error!");
-                Debug.LogError(errorMessage);
-                throw new Exception();
+            if (!string.IsNullOrEmpty (errorMessage.ToString ())) {
+                Debug.LogError ("Error!");
+                Debug.LogError (errorMessage);
+                throw new Exception ();
             }
 
-            Debug.Log("Complete!");
+            Debug.Log ("Complete!");
         }
 
-        public static void BuildApk()
-        {
-            BuildParameter param = new BuildParameter(outputDirectory + @"\android\" + PlayerSettings.productName + "Dev.apk", BuildTarget.Android);
+        public static void BuildApk () {
+                var param = new BuildParameter (outputDirectory + @"\android\" + PlayerSettings.productName + "Dev.apk ", BuildTarget.Android);
             BuildByParameter(param);
         }
 
         public static void BuildExe()
         {
-            BuildParameter param = new BuildParameter(outputDirectory + @"\exe\ " + PlayerSettings.productName + "Dev.exe", BuildTarget.StandaloneWindows);
+            var param = new BuildParameter(outputDirectory + @"\exe\ " + PlayerSettings.productName + "Dev.exe ", BuildTarget.StandaloneWindows);
             BuildByParameter(param);
         }
 
         public static void BuildWebGL()
         {
-            BuildParameter param = new BuildParameter(outputDirectory + @"\webgl\" + PlayerSettings.productName + "Dev", BuildTarget.WebGL);
-            BuildByParameter(param);
+            var param = new BuildParameter(outputDirectory + @"\webgl\ " + PlayerSettings.productName + "Dev ", BuildTarget.WebGL);
+            BuildByParameter (param);
         }
     }
 }
