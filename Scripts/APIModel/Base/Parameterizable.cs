@@ -4,5 +4,5 @@ using UnityEngine;
 
 namespace Momiji
 {
-	public interface IParametable { }
+	public interface IParameterizable { }
 }
