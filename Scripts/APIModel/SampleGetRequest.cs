@@ -9,6 +9,7 @@ namespace Momiji
 	{
 		void Get ();
 	}
+
 	public class SampleGetRequest : Requestable, ISampleRequest, ISendRequest
 	{
 		public Requestable Request => this;
