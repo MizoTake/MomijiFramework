@@ -36,4 +36,10 @@ namespace Momiji
             }
         }
     }
+
+    public abstract class GetRequestable<Param, Res> : Requestable, ISendRequest<Param, Res> where Param : IParameterizable where Res : IResponsible
+    {
+        public Requestable Request => this;
+        public IObservable<Res> Get (Param param) => this.Send ();
+    }
 }

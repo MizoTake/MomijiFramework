@@ -5,19 +5,30 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Momiji
 {
-	public interface IMockSendRequest : ISendRequest { }
+	public interface IMockSendRequest<Param, Res> : ISendRequest<Param, Res> where Param : IParameterizable where Res : IResponsible { }
 
 	public static class IMockSendRequestExtensions
 	{
-		static async Task Send (this IMockSendRequest send) => await SendAsync (send);
+		public static IObservable<Res> Send<Param, Res> (this IMockSendRequest<IParameterizable, IResponsible> send) where Param : IParameterizable where Res : IResponsible => SendAsync<Param, Res> (send);
 
-		private static async Task SendAsync (this IMockSendRequest send)
+		private static IObservable<Res> SendAsync<Param, Res> (this IMockSendRequest<IParameterizable, IResponsible> send) where Param : IParameterizable where Res : IResponsible
 		{
+			return Observable.Create<Res> (_ =>
+			{
+				_.OnNext (MockAPIRequest<Param, Res> (send).Result);
+				return Disposable.Create (() => { });
+			});
+		}
+
+		static async Task<Res> MockAPIRequest<Param, Res> (this ISendRequest<IParameterizable, IResponsible> send) where Param : IParameterizable where Res : IResponsible
+		{
+			Res result = default (Res);
 #if UNITY_ANDROID || UNITY_IPHONE
 			var path = send.Request.data.url;
 #else
@@ -33,12 +44,10 @@ namespace Momiji
 			if (HasBomWithText (reader.bytes)) text = GetDeletedBomText (reader.text);
 #else
 			StreamReader reader = new StreamReader (path, Encoding.Default);
-			await Task.Delay (1000);
 			// UTF8文字列として取得する
 			string text = reader.ReadToEnd ();
 #endif
 
-			await Task.Delay (1000);
 			using (TextReader stream = new StringReader (text))
 			{
 				text = stream.ReadToEnd ();
@@ -48,8 +57,9 @@ namespace Momiji
 					text = "{ \"" + send.Request.arrayName + "\": " + text + "}";
 				}
 				Debug.Log ("json : " + text);
-				send.Request.response = JsonUtility.FromJson<IResponsible> (text);
+				result = JsonUtility.FromJson<Res> (text);
 				send.Request.OnComplete ();
+				return result;
 			}
 		}
 

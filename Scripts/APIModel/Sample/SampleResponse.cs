@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Momiji
+namespace Momiji.Sample
 {
-	public interface IParameterizable { }
+	public class SampleResponse : IResponsible
+	{
+
+	}
 }

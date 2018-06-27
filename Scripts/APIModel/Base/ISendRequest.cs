@@ -7,17 +7,28 @@ using UnityEngine;
 
 namespace Momiji
 {
-	public interface ISendRequest
+	public interface ISendRequest<Param, Res> where Param : IParameterizable where Res : IResponsible
 	{
 		Requestable Request { get; }
 	}
 
 	public static class ISendRequestExtensions
 	{
-		public static Task Send (this ISendRequest send) => SendAsync (send);
+		public static IObservable<Res> Send<Param, Res> (this ISendRequest<Param, Res> send) where Param : IParameterizable where Res : IResponsible => SendAsync<Param, Res> (send);
 
-		static async Task SendAsync (this ISendRequest send)
+		static IObservable<Res> SendAsync<Param, Res> (this ISendRequest<Param, Res> send) where Param : IParameterizable where Res : IResponsible
 		{
+			return Observable.Create<Res> (_ =>
+			{
+				_.OnNext (APIRequest<Param, Res> (send).Result);
+				return Disposable.Create (() => { });
+			});
+		}
+
+		static async Task<Res> APIRequest<Param, Res> (this ISendRequest<Param, Res> send) where Param : IParameterizable where Res : IResponsible
+		{
+			Res result = default (Res);
+
 			Debug.Log ("calling api: " + send.Request.data.url);
 			await send.Request.data.SendWebRequest ();
 
@@ -38,10 +49,11 @@ namespace Momiji
 					text = "{ \"" + send.Request.arrayName + "\": " + text + "}";
 				}
 				send.Request.json = text;
-				send.Request.response = JsonUtility.FromJson<IResponsible> (text);
+				result = JsonUtility.FromJson<Res> (text);
 				send.Request.OnComplete ();
 				Debug.Log (text);
 			}
+			return result;
 		}
 	}
 }
