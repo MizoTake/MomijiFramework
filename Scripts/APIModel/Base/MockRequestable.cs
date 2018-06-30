@@ -23,22 +23,18 @@ namespace Momiji
 #elif UNITY_ANDROID
 				return "jar:file://" + Application.dataPath + "!/assets" + DIRECTORY_NAME;
 #else
-				return Application.streamingAssetsPath + DIRECTORY_NAME;
+				return Application.dataPath + "/MomijiFramework/StreamingAssets" + DIRECTORY_NAME;
 #endif
 			}
 		}
+
 		public IObservable<Res> MockResponseData ()
 		{
 			return Observable.Create<Res> (_ =>
 			{
 				core = new Task (() =>
 				{
-#if UNITY_ANDROID || UNITY_IPHONE
-					var path = send.Request.data.url;
-#else
-					// http://localhost を削除
-					var path = data.url.Remove (0, 16);
-#endif
+					var path = HostName + Path;
 					Debug.Log ("reading json file: " + path);
 
 #if UNITY_ANDROID
@@ -51,6 +47,8 @@ namespace Momiji
 					// UTF8文字列として取得する
 					string text = reader.ReadToEnd ();
 #endif
+
+					Debug.Log (text);
 
 					using (TextReader stream = new StringReader (text))
 					{
