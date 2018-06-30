@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Momiji
 {
-	public class MockRequestable : Requestable
+	public class MockRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
 	{
 		private readonly string DIRECTORY_NAME = "/MockAPI/";
 

@@ -6,6 +6,6 @@ namespace Momiji.Sample
 {
 	public class SampleResponse : IResponsible
 	{
-
+		public string title;
 	}
 }

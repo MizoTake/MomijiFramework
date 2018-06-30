@@ -6,9 +6,8 @@ using UnityEngine;
 
 namespace Momiji.Sample
 {
-	public class SampleMockRequest : MockRequestable, IMockSendRequest<SampleParamter, SampleResponse>, ISampleRequest
+	public class SampleMockRequest : Requestable<SampleParamter, SampleResponse>, ISampleRequest
 	{
-		public Requestable Request => this;
-		public IObservable<SampleResponse> Get (SampleParamter param) => this.Send ();
+		public IObservable<SampleResponse> Get (SampleParamter param) => this.SendAsync ();
 	}
 }
