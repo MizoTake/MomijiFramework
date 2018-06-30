@@ -80,27 +80,11 @@ Requesterは実際にAPIを叩いて結果を得る実装
                 })
                 .AddTo (this);
 
-            var mockRequest = new SampleMockRequest ();
-
-            mockRequest.Get (param)
-                .Subscribe (_ =>
-                {
-                    Debug.Log (_.title);
-                })
-                .AddTo (this);
-
-            var errorRequest = new SampleErrorRequest ();
-
-            errorRequest.Get (param)
-                .Subscribe (_ =>
-                {
-                    Debug.Log (_.title);
-                })
-                .AddTo (this);
+            / ..省略.. /
 
             request.Dispatch ();
-            mockRequest.Dispatch ();
-            errorRequest.Dispatch ();
+            
+            / ..省略.. /
         }
     }
 ```
