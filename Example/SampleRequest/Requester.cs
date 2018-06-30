@@ -37,8 +37,8 @@ public class Requester : MonoBehaviour
 			})
 			.AddTo (this);
 
-		// request.Dispatch ();
+		request.Dispatch ();
 		mockRequest.Dispatch ();
-		// errorRequest.Dispatch ();
+		errorRequest.Dispatch ();
 	}
 }
