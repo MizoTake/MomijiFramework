@@ -16,7 +16,7 @@ namespace Momiji.Sample
 
 		public string QueryPath ()
 		{
-			return this.CreatePath (string.Format (nameof (city) + "=" + city.ToString ()));
+			return this.CreatePath (nameof (city) + "=" + city.ToString ());
 		}
 	}
 }
