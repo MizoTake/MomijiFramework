@@ -9,10 +9,9 @@ public class Requester : MonoBehaviour
 
 	void Start ()
 	{
-		var param = new SampleParamter (city: 130010);
 		var request = new SampleRequest ();
 
-		request.Get (param)
+		request.Get ()
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);
@@ -21,7 +20,7 @@ public class Requester : MonoBehaviour
 
 		var mockRequest = new SampleMockRequest ();
 
-		mockRequest.Get (param)
+		mockRequest.Get ()
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);
@@ -30,15 +29,17 @@ public class Requester : MonoBehaviour
 
 		var errorRequest = new SampleErrorRequest ();
 
-		errorRequest.Get (param)
+		errorRequest.Get ()
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);
 			})
 			.AddTo (this);
 
-		request.Dispatch ();
-		mockRequest.Dispatch ();
-		errorRequest.Dispatch ();
+		var param = new SampleParamter (city: 130010);
+
+		request.Dispatch (param);
+		mockRequest.Dispatch (param);
+		errorRequest.Dispatch (param);
 	}
 }

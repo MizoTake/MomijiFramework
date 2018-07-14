@@ -21,7 +21,19 @@ namespace Momiji
         protected string Path { get; set; } = "";
         protected Dictionary<string, string> Header { get; set; }
 
-        public void Dispatch () => core.Start (TaskScheduler.FromCurrentSynchronizationContext ());
+        public void Dispatch (Param param) {
+            Uri uri = new Uri (HostName + Path);
+			if (param is IPathParameterizable)
+			{
+				uri = new Uri (uri, (param as IPathParameterizable).QueryPath ());
+			}
+			data = UnityWebRequest.Get (uri);
+			Header?.ForEach (_ =>
+			{
+				data.SetRequestHeader (_.Key, _.Value);
+			});
+            core.Start (TaskScheduler.FromCurrentSynchronizationContext ());
+        }
 
         protected IObservable<Res> ResponseData ()
         {

@@ -12,11 +12,11 @@ namespace Momiji.Sample
 		{
 			Path = "sample.json";
 		}
-		public IObservable<SampleResponse> Get (SampleParamter param) => this.MockResponseData ();
+		public IObservable<SampleResponse> Get () => this.MockResponseData ();
 	}
 
 	public class SampleErrorRequest : ErrorRequestable<SampleParamter, SampleResponse>, ISampleRequest
 	{
-		public IObservable<SampleResponse> Get (SampleParamter param) => this.ErrorResponseData ();
+		public IObservable<SampleResponse> Get () => this.ErrorResponseData ();
 	}
 }
