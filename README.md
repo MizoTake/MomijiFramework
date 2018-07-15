@@ -70,10 +70,9 @@ Requesterは実際にAPIを叩いて結果を得る実装
 
         void Start ()
         {
-            var param = new SampleParamter (city: 130010);
             var request = new SampleRequest ();
 
-            request.Get (param)
+            request.Get 
                 .Subscribe (_ =>
                 {
                     Debug.Log (_.title);
@@ -82,7 +81,9 @@ Requesterは実際にAPIを叩いて結果を得る実装
 
             / ..省略.. /
 
-            request.Dispatch ();
+			var param = new SampleParamter (city: 130010);
+
+            request.Dispatch (param);
             
             / ..省略.. /
         }

@@ -22,23 +22,22 @@ namespace Momiji
         protected string Path { get; set; } = "";
         protected Dictionary<string, string> Header { get; set; } = new Dictionary<string, string> () { { "Content-Type", "application/json" } };
 
+        protected virtual void UpdateRequest (Param param) { }
+
         public async void Dispatch (Param param)
         {
-            if (param is IPathParameterizable)
-            {
-                data.uri = new Uri (data.uri, ((IPathParameterizable) param).QueryPath ());
-            }
-            else
-            {
-                byte[] bodyRaw = Encoding.UTF8.GetBytes (JsonUtility.ToJson (param));
-                data.uploadHandler = (UploadHandler) new UploadHandlerRaw (bodyRaw);
-            }
+            UpdateRequest (param);
 
             Debug.Log ("hajimari");
             var context = TaskScheduler.FromCurrentSynchronizationContext ();
+            var isDone = data.isDone;
             await Task.Run (() =>
             {
                 Debug.Log ("core start");
+                if (!isDone)
+                {
+                    core.Wait ();
+                }
                 core.Start (context);
                 // core.RunSynchronously (context);
                 Debug.Log ("wait no owari");

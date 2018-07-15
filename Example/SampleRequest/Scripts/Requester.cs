@@ -11,7 +11,7 @@ public class Requester : MonoBehaviour
 	{
 		var request = new SampleRequest ();
 
-		request.Get ()
+		request.Get
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);
@@ -20,7 +20,7 @@ public class Requester : MonoBehaviour
 
 		var mockRequest = new SampleMockRequest ();
 
-		mockRequest.Get ()
+		mockRequest.Get
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);
@@ -29,7 +29,7 @@ public class Requester : MonoBehaviour
 
 		var errorRequest = new SampleErrorRequest ();
 
-		errorRequest.Get ()
+		errorRequest.Get
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);

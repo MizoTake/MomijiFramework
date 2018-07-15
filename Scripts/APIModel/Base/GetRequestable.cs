@@ -1,19 +1,26 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Momiji
 {
 	public abstract class GetRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
 	{
-		public IObservable<Res> Get ()
+
+		protected override void UpdateRequest (Param param)
 		{
 			Uri uri = new Uri (HostName + Path);
+			if (param is IPathParameterizable)
+			{
+				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
+			}
 			data = UnityWebRequest.Get (uri);
 			Header?.ForEach (_ =>
 			{
 				data.SetRequestHeader (_.Key, _.Value);
 			});
-			return this.ResponseData ();
 		}
+
+		public IObservable<Res> Get => this.ResponseData ();
 	}
 }

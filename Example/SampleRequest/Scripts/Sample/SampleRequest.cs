@@ -8,8 +8,8 @@ namespace Momiji.Sample
 {
 	interface ISampleRequest
 	{
-		IObservable<SampleResponse> Get ();
-	}
+        IObservable<SampleResponse> Get { get; }
+    }
 
 	public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
 	{
