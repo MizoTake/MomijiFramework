@@ -20,20 +20,19 @@ namespace Momiji
 
         protected string HostName { get; set; } = "";
         protected string Path { get; set; } = "";
-        protected Dictionary<string, string> Header { get; set; }
+        protected Dictionary<string, string> Header { get; set; } = new Dictionary<string, string> () { { "Content-Type", "application/json" } };
 
         public async void Dispatch (Param param)
         {
-            Uri uri = new Uri (HostName + Path);
             if (param is IPathParameterizable)
             {
-                uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
+                data.uri = new Uri (data.uri, ((IPathParameterizable) param).QueryPath ());
             }
-            data = UnityWebRequest.Get (uri);
-            Header?.ForEach (_ =>
+            else
             {
-                data.SetRequestHeader (_.Key, _.Value);
-            });
+                byte[] bodyRaw = Encoding.UTF8.GetBytes (JsonUtility.ToJson (param));
+                data.uploadHandler = (UploadHandler) new UploadHandlerRaw (bodyRaw);
+            }
 
             Debug.Log ("hajimari");
             var context = TaskScheduler.FromCurrentSynchronizationContext ();

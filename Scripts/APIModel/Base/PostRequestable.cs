@@ -3,12 +3,12 @@ using UnityEngine.Networking;
 
 namespace Momiji
 {
-	public abstract class GetRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
+	public abstract class PostRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
 	{
-		public IObservable<Res> Get ()
+		public IObservable<Res> Post ()
 		{
 			Uri uri = new Uri (HostName + Path);
-			data = UnityWebRequest.Get (uri);
+			data = UnityWebRequest.Post (uri, "");
 			Header?.ForEach (_ =>
 			{
 				data.SetRequestHeader (_.Key, _.Value);
