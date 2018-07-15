@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -21,64 +22,77 @@ namespace Momiji
         protected string Path { get; set; } = "";
         protected Dictionary<string, string> Header { get; set; }
 
-        public virtual void Dispatch(Param param)
+        public async void Dispatch (Param param)
         {
-            Uri uri = new Uri(HostName + Path);
+            Uri uri = new Uri (HostName + Path);
             if (param is IPathParameterizable)
             {
-                uri = new Uri(uri, ((IPathParameterizable)param).QueryPath());
+                uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
             }
-            data = UnityWebRequest.Get(uri);
-            Header?.ForEach(_ =>
-           {
-               data.SetRequestHeader(_.Key, _.Value);
-           });
-            core.Start(TaskScheduler.FromCurrentSynchronizationContext());
+            data = UnityWebRequest.Get (uri);
+            Header?.ForEach (_ =>
+            {
+                data.SetRequestHeader (_.Key, _.Value);
+            });
+
+            Debug.Log ("hajimari");
+            var context = TaskScheduler.FromCurrentSynchronizationContext ();
+            await Task.Run (() =>
+            {
+                Debug.Log ("core start");
+                core.Start (context);
+                // core.RunSynchronously (context);
+                Debug.Log ("wait no owari");
+            });
+            core.Wait ();
+            Debug.Log ("owari");
         }
 
-        protected IObservable<Res> ResponseData()
+        protected IObservable<Res> ResponseData ()
         {
-            return Observable.Create<Res>(_ =>
-           {
-               core = new Task(async () =>
-               {
-                   Debug.Log("calling api: " + data.url);
+            return Observable.Create<Res> (_ =>
+            {
+                Debug.Log ("set core");
+                core = new Task (async () =>
+                {
+                    Debug.Log ("calling api: " + data.url);
 
-                   await data.SendWebRequest();
+                    await data.SendWebRequest ();
 
-                   // 通信エラーチェック
-                   if (data.isNetworkError)
-                   {
-                       Debug.Log(data.error);
-                       _.OnError(new Exception(data.error));
-                   }
-                   else
-                   {
-                       // UTF8文字列として取得する
-                       string text = data.downloadHandler.text;
-                       if (array)
-                       {
-                           // Responseで指定した配列で取得する(Default: model)
-                           text = "{ \"" + arrayName + "\": " + text + "}";
-                       }
-                       Debug.Log(text);
-                       _.OnNext(JsonUtility.FromJson<Res>(text));
-                       _.OnCompleted();
-                   }
-               });
-               return Disposable.Create(() => { });
-           });
+                    // 通信エラーチェック
+                    if (data.isNetworkError)
+                    {
+                        Debug.Log (data.error);
+                        _.OnError (new Exception (data.error));
+                    }
+                    else
+                    {
+                        // UTF8文字列として取得する
+                        string text = data.downloadHandler.text;
+                        if (array)
+                        {
+                            // Responseで指定した配列で取得する(Default: model)
+                            text = "{ \"" + arrayName + "\": " + text + "}";
+                        }
+                        Debug.Log (text);
+                        _.OnNext (JsonUtility.FromJson<Res> (text));
+                        _.OnCompleted ();
+                    }
+                });
+                core.ConfigureAwait (false);
+                return Disposable.Create (() => { });
+            });
         }
 
         //BOM有無の判定
-        private bool HasBomWithText(byte[] bytes)
+        private bool HasBomWithText (byte[] bytes)
         {
             return bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF;
         }
         //BOM消し
-        private string GetDeletedBomText(string text)
+        private string GetDeletedBomText (string text)
         {
-            return text.Remove(0, 1);
+            return text.Remove (0, 1);
         }
     }
 }

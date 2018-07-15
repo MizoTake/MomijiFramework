@@ -11,6 +11,8 @@ namespace Momiji
 {
 	public abstract class ErrorRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
 	{
+
+		public new void Dispatch (Param param) => core.Start (TaskScheduler.FromCurrentSynchronizationContext ());
 		public IObservable<Res> ErrorResponseData ()
 		{
 			return Observable.Create<Res> (_ =>
