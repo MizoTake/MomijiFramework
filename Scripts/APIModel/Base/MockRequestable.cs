@@ -29,42 +29,42 @@ namespace Momiji
             }
         }
 
-        public new void Dispatch (Param param) => core.Start (TaskScheduler.FromCurrentSynchronizationContext ());
+        public new async Task Dispatch (Param param)
+        {
+            var task = new Task (async () =>
+            {
+                var path = HostName + Path;
+                Debug.Log ("reading json file: " + path);
+
+#if UNITY_ANDROID
+                WWW reader = new WWW (path);
+                while (!reader.isDone) { }
+                string text = reader.text;
+                if (HasBomWithText (reader.bytes)) text = GetDeletedBomText (reader.text);
+#else
+                StreamReader reader = new StreamReader (path, Encoding.Default);
+                // UTF8文字列として取得する
+                string text = reader.ReadToEnd ();
+#endif
+                using (TextReader stream = new StringReader (text))
+                {
+                    text = stream.ReadToEnd ();
+                    if (array)
+                    {
+                        // Responseで指定した配列で取得する(Default: model)
+                        text = "{ \"" + arrayName + "\": " + text + "}";
+                    }
+                    Debug.Log ("json : " + text);
+                    notify.OnNext (JsonUtility.FromJson<Res> (text));
+                    notify.OnCompleted ();
+                }
+            });
+            task.Start (TaskScheduler.FromCurrentSynchronizationContext ());
+        }
 
         public IObservable<Res> MockResponseData ()
         {
-            return Observable.Create<Res> (_ =>
-            {
-                core = new Task (() =>
-                {
-                    var path = HostName + Path;
-                    Debug.Log ("reading json file: " + path);
-
-#if UNITY_ANDROID
-                    WWW reader = new WWW (path);
-                    while (!reader.isDone) { }
-                    string text = reader.text;
-                    if (HasBomWithText (reader.bytes)) text = GetDeletedBomText (reader.text);
-#else
-                    StreamReader reader = new StreamReader (path, Encoding.Default);
-                    // UTF8文字列として取得する
-                    string text = reader.ReadToEnd ();
-#endif
-                    using (TextReader stream = new StringReader (text))
-                    {
-                        text = stream.ReadToEnd ();
-                        if (array)
-                        {
-                            // Responseで指定した配列で取得する(Default: model)
-                            text = "{ \"" + arrayName + "\": " + text + "}";
-                        }
-                        Debug.Log ("json : " + text);
-                        _.OnNext (JsonUtility.FromJson<Res> (text));
-                        _.OnCompleted ();
-                    }
-                });
-                return Disposable.Create (() => { });
-            });
+            return ResponseData ();
         }
     }
 }

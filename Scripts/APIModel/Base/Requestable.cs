@@ -13,8 +13,10 @@ namespace Momiji
 {
     public abstract class Requestable<Param, Res>
     {
-        protected UnityWebRequest data;
-        protected Task core;
+
+        private Task runing;
+
+        protected IObserver<Res> notify;
         protected string arrayName = "model";
         protected bool array = false;
 
@@ -22,62 +24,55 @@ namespace Momiji
         protected string Path { get; set; } = "";
         protected Dictionary<string, string> Header { get; set; } = new Dictionary<string, string> () { { "Content-Type", "application/json" } };
 
-        protected virtual void UpdateRequest (Param param) { }
+        protected virtual UnityWebRequest UpdateRequest (Param param) => new UnityWebRequest ();
 
         public async void Dispatch (Param param)
         {
-            UpdateRequest (param);
+            var data = UpdateRequest (param);
 
-            Debug.Log ("hajimari");
-            var context = TaskScheduler.FromCurrentSynchronizationContext ();
-            var isDone = data.isDone;
-            await Task.Run (() =>
+            var task = new Task (async () =>
             {
-                Debug.Log ("core start");
-                if (!isDone)
+                Debug.Log ("calling api: " + data.url);
+
+                await data.SendWebRequest ();
+
+                // 通信エラーチェック
+                if (data.isNetworkError)
                 {
-                    core.Wait ();
+                    Debug.Log (data.error);
+                    notify.OnError (new Exception (data.error));
                 }
-                core.Start (context);
-                // core.RunSynchronously (context);
-                Debug.Log ("wait no owari");
+                else
+                {
+                    // UTF8文字列として取得する
+                    string text = data.downloadHandler.text;
+                    if (array)
+                    {
+                        // Responseで指定した配列で取得する(Default: model)
+                        text = "{ \"" + arrayName + "\": " + text + "}";
+                    }
+                    Debug.Log (data.uri.AbsoluteUri + ": " + text);
+                    notify.OnNext (JsonUtility.FromJson<Res> (text));
+                }
             });
-            core.Wait ();
-            Debug.Log ("owari");
+            if (runing == null)
+            {
+                runing = task;
+            }
+            else
+            {
+                await runing;
+                runing = task;
+            }
+            task.Start (TaskScheduler.FromCurrentSynchronizationContext ());
+            await task;
         }
 
         protected IObservable<Res> ResponseData ()
         {
             return Observable.Create<Res> (_ =>
             {
-                Debug.Log ("set core");
-                core = new Task (async () =>
-                {
-                    Debug.Log ("calling api: " + data.url);
-
-                    await data.SendWebRequest ();
-
-                    // 通信エラーチェック
-                    if (data.isNetworkError)
-                    {
-                        Debug.Log (data.error);
-                        _.OnError (new Exception (data.error));
-                    }
-                    else
-                    {
-                        // UTF8文字列として取得する
-                        string text = data.downloadHandler.text;
-                        if (array)
-                        {
-                            // Responseで指定した配列で取得する(Default: model)
-                            text = "{ \"" + arrayName + "\": " + text + "}";
-                        }
-                        Debug.Log (text);
-                        _.OnNext (JsonUtility.FromJson<Res> (text));
-                        _.OnCompleted ();
-                    }
-                });
-                core.ConfigureAwait (false);
+                notify = _;
                 return Disposable.Create (() => { });
             });
         }
