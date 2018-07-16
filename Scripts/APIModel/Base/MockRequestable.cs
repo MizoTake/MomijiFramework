@@ -29,9 +29,9 @@ namespace Momiji
             }
         }
 
-        public new async Task Dispatch (Param param)
+        public new void Dispatch (Param param)
         {
-            var task = new Task (async () =>
+            var task = new Task (() =>
             {
                 var path = HostName + Path;
                 Debug.Log ("reading json file: " + path);

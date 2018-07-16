@@ -39,8 +39,6 @@ public class Requester : MonoBehaviour
 		var param = new SampleParamter (city: 130010);
 
 		request.Dispatch (param);
-		request.Dispatch (param);
-		request.Dispatch (param);
 		mockRequest.Dispatch (param);
 		errorRequest.Dispatch (param);
 	}
