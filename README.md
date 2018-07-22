@@ -15,6 +15,11 @@ git submodule add https://github.com/MizoTake/MomijiFramework.git
 
 ## Web API Client
 
+# [WIP] Swagger Codegen for Momiji
+[swagger-codegen-momiji](https://github.com/MizoTake/swagger-codegen-momiji)
+
+# Usage Example
+
 Sampleで叩いてるWebAPI: [livedoor Weather Hacks](http://weather.livedoor.com/weather_hacks/webservice)
 
 上記のWebAPIを叩くのに必要なもの
