@@ -3,6 +3,7 @@
 ## Developed Unity2018.x
 
 ## Use Assets
+
 - UniRx
 - DoTween
 - Zenject
@@ -16,15 +17,17 @@ git submodule add https://github.com/MizoTake/MomijiFramework.git
 ## Web API Client
 
 # [WIP] Swagger Codegen for Momiji
+
 [swagger-codegen-momiji](https://github.com/MizoTake/swagger-codegen-momiji)
 
 # Usage Example
 
-Sampleで叩いてるWebAPI: [livedoor Weather Hacks](http://weather.livedoor.com/weather_hacks/webservice)
+Sample で叩いてる WebAPI: [livedoor Weather Hacks](http://weather.livedoor.com/weather_hacks/webservice)
 
-上記のWebAPIを叩くのに必要なもの
+上記の WebAPI を叩くのに必要なもの
 
 [SampleParamter.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleParamter.cs)
+
 ```csharp:SampleParamter.cs
 public class SampleParamter : IPathParameterizable
 {
@@ -43,10 +46,11 @@ public class SampleParamter : IPathParameterizable
 ```
 
 [SampleRequest.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleRequest.cs)
+
 ```csharp:SampleRequest.cs
 interface ISampleRequest
 {
-	IObservable<SampleResponse> Get (SampleParamter param);
+	IObservable<SampleResponse> Get;
 }
 
 public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
@@ -59,6 +63,7 @@ public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISa
 ```
 
 [SampleResponse.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleResponse.cs)
+
 ```csharp:SampleParamter.cs
 public class SampleResponse  : IResponsible
 {
@@ -66,9 +71,10 @@ public class SampleResponse  : IResponsible
 }
 ```
 
-Requesterは実際にAPIを叩いて結果を得る実装
+Requester は実際に API を叩いて結果を得る実装
 
 [Requester.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Requester.cs)
+
 ```csharp:SampleParamter.cs
 public class Requester : MonoBehaviour
 {
@@ -77,7 +83,7 @@ public class Requester : MonoBehaviour
 	{
 		var request = new SampleRequest ();
 
-		request.Get 
+		request.Get
 			.Subscribe (_ =>
 			{
 				Debug.Log (_.title);
@@ -89,15 +95,16 @@ public class Requester : MonoBehaviour
 		var param = new SampleParamter (city: 130010);
 
 		request.Dispatch (param);
-		
+
 		/ ..省略.. /
 	}
 }
 ```
 
-Requestクラスで実装したAPIメソッドに合うメソッドを購読
+Request クラスで実装した API メソッドに合うメソッドを購読
 
-DispachでAPIを叩きにいく処理
+Dispach で API を叩きにいく処理
 
 ## License
+
 MIT
