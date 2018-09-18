@@ -13,7 +13,7 @@ namespace Momiji
 			{
 				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
 			}
-			var data = UnityWebRequest.Put (uri, JsonUtility.ToJson (param));
+			var data = UnityWebRequest.Delete (uri);
 			Header?.ForEach (_ =>
 			{
 				data.SetRequestHeader (_.Key, _.Value);
