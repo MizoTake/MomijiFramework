@@ -21,6 +21,6 @@ namespace Momiji
 			return data;
 		}
 
-		public IObservable<Res> Delete () => this.ResponseData ();
+		public IObservable<Res> Delete => this.ResponseData ();
 	}
 }

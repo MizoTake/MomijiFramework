@@ -21,6 +21,6 @@ namespace Momiji
 			return data;
 		}
 
-		public IObservable<Res> Post () => this.ResponseData ();
+		public IObservable<Res> Post => this.ResponseData ();
 	}
 }
