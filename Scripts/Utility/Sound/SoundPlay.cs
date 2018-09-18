@@ -5,8 +5,10 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Momiji {
-    public class SoundPlay : MonoBehaviour {
+namespace Momiji
+{
+    public class SoundPlay : MonoBehaviour
+    {
 
         [SerializeField]
         private bool _auto = true;
@@ -19,13 +21,16 @@ namespace Momiji {
         [SerializeField]
         private Voice _voice;
 
-        void Start () {
+        void Start ()
+        {
             if (_auto) Play ();
         }
 
-        public void Play () {
+        public void Play ()
+        {
             var result = -1;
-            switch (_type) {
+            switch (_type)
+            {
                 case SoundType.BGM:
                     result = (int) _bgm;
                     break;
@@ -42,7 +47,8 @@ namespace Momiji {
 #if UNITY_EDITOR
         [CustomEditor (typeof (SoundPlay))]
         [CanEditMultipleObjects]
-        public class CharaManagerEditor : Editor {
+        public class CharaManagerEditor : Editor
+        {
 
             SerializedProperty _auto;
             SerializedProperty _selectSoundType;
@@ -53,7 +59,8 @@ namespace Momiji {
             /// <summary>
             /// 初回処理
             /// </summary>
-            void OnEnable () {
+            void OnEnable ()
+            {
                 _auto = serializedObject.FindProperty ("_auto");
                 _selectSoundType = serializedObject.FindProperty ("_type");
                 _bgm = serializedObject.FindProperty ("_bgm");
@@ -64,7 +71,8 @@ namespace Momiji {
             /// <summary>
             /// GUI表示処理
             /// </summary>
-            public override void OnInspectorGUI () {
+            public override void OnInspectorGUI ()
+            {
                 serializedObject.Update ();
 
                 _auto.boolValue = EditorGUILayout.Toggle ("Start Play", _auto.boolValue);
@@ -73,7 +81,8 @@ namespace Momiji {
                 _selectSoundType.enumValueIndex = (int) (SoundType) EditorGUILayout.EnumPopup ("Sound Type", (SoundType) _selectSoundType.enumValueIndex);
                 EditorGUI.EndChangeCheck ();
 
-                switch ((SoundType) _selectSoundType.enumValueIndex) {
+                switch ((SoundType) _selectSoundType.enumValueIndex)
+                {
                     case SoundType.BGM:
                     EditorGUILayout.PropertyField (_bgm, true);
                     break;

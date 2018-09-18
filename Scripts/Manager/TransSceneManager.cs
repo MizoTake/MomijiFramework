@@ -8,14 +8,17 @@ using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Momiji {
-    public class TransSceneManager : Singleton<TransSceneManager> {
+namespace Momiji
+{
+    public class TransSceneManager : Singleton<TransSceneManager>
+    {
         private bool _isSceneLoading = false;
         private bool _isSceneUnloading = false;
         private string _loadingSceneName;
         private string _unloadingSceneName;
 
-        protected override void OnAwake () {
+        protected override void OnAwake ()
+        {
             base.OnAwake ();
             DontDestroyOnLoad (gameObject);
         }
@@ -26,7 +29,8 @@ namespace Momiji {
         /// <returns>The scene.</returns>
         /// <param name="sceneName">Scene name.</param>
         /// <param name="onComplete">On complete.</param>
-        public static void LoadScene (SceneInfo.SceneEnum sceneEnum, Action onComplete = null) {
+        public static void LoadScene (SceneInfo.SceneEnum sceneEnum, Action onComplete = null)
+        {
             Instance.StartCoroutine (LoadSceneAsync (sceneEnum, onComplete));
         }
 
@@ -35,7 +39,8 @@ namespace Momiji {
         /// </summary>
         /// <param name="sceneName">Scene name</param>
         /// <param name="onComplete">On complete</param>
-        public static void LoadAddScene (SceneInfo.SceneEnum sceneEnum, Action onComplete = null) {
+        public static void LoadAddScene (SceneInfo.SceneEnum sceneEnum, Action onComplete = null)
+        {
             Instance.StartCoroutine (LoadSceneAsync (sceneEnum, onComplete, LoadSceneMode.Additive));
         }
 
@@ -43,7 +48,8 @@ namespace Momiji {
         /// ロードしているSceneをアンロードします
         /// </summary>
         /// <param name="sceneName">Scene name</param>
-        public static void UnloadScene (SceneInfo.SceneEnum sceneEnum, Action onComplete = null) {
+        public static void UnloadScene (SceneInfo.SceneEnum sceneEnum, Action onComplete = null)
+        {
             Instance.StartCoroutine (UnloadSceneAsync (sceneEnum, onComplete));
         }
 
@@ -51,7 +57,8 @@ namespace Momiji {
         /// 指定したSceneに強制リロードします
         /// </summary>
         /// <param name="sceneEnum"></param>
-        public static void ReloadScene (SceneInfo.SceneEnum sceneEnum) {
+        public static void ReloadScene (SceneInfo.SceneEnum sceneEnum)
+        {
             SceneManager.LoadScene (sceneEnum.ToString ());
         }
 
@@ -59,7 +66,8 @@ namespace Momiji {
         /// 現在のSceneに強制リロードします
         /// </summary>
         /// <param name="sceneEnum"></param>
-        public static void ReloadScene () {
+        public static void ReloadScene ()
+        {
             SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
         }
 
@@ -69,21 +77,25 @@ namespace Momiji {
         /// <returns>The scene.</returns>
         /// <param name="sceneName">Scene name.</param>
         /// <param name="onComplete">On complete.</param>
-        private static IEnumerator LoadSceneAsync (SceneInfo.SceneEnum sceneEnum, Action onComplete = null, LoadSceneMode mode = LoadSceneMode.Single) {
+        private static IEnumerator LoadSceneAsync (SceneInfo.SceneEnum sceneEnum, Action onComplete = null, LoadSceneMode mode = LoadSceneMode.Single)
+        {
             var sceneName = sceneEnum.ToString ();
-            if (Instance._isSceneLoading || sceneName == Instance._loadingSceneName) {
+            if (Instance._isSceneLoading || sceneName == Instance._loadingSceneName)
+            {
                 yield break;
             }
 
             // invalid
-            if (!SceneInfo.SceneNames.Contains (sceneName)) {
+            if (!SceneInfo.SceneNames.Contains (sceneName))
+            {
                 Debug.LogError ("not registed Scene");
                 yield break;
             }
 
             // scene loaded
             UnityEngine.SceneManagement.Scene scene = UnityEngine.SceneManagement.SceneManager.GetSceneByName (sceneName);
-            if (scene.isLoaded) {
+            if (scene.isLoaded)
+            {
                 Debug.LogError ("already loadScene");
                 yield break;
             }
@@ -92,13 +104,15 @@ namespace Momiji {
             // loading
             Instance._loadingSceneName = sceneName;
             AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync (sceneName, mode);
-            while (!load.isDone) {
+            while (!load.isDone)
+            {
                 yield return 0;
             }
             Instance._isSceneLoading = false;
 
             // callback
-            if (onComplete != null) {
+            if (onComplete != null)
+            {
                 onComplete ();
             }
 
@@ -111,27 +125,32 @@ namespace Momiji {
         /// <param name="sceneName">Scene name</param>
         /// <param name="onComplete">On Complete</param>
         /// <returns></returns>
-        private static IEnumerator UnloadSceneAsync (SceneInfo.SceneEnum sceneEnum, Action onComplete = null) {
+        private static IEnumerator UnloadSceneAsync (SceneInfo.SceneEnum sceneEnum, Action onComplete = null)
+        {
             var sceneName = sceneEnum.ToString ();
 
-            if (Instance._isSceneUnloading || sceneName == Instance._unloadingSceneName) {
+            if (Instance._isSceneUnloading || sceneName == Instance._unloadingSceneName)
+            {
                 yield break;
             }
 
-            if (!SceneInfo.SceneNames.Contains (sceneName)) {
+            if (!SceneInfo.SceneNames.Contains (sceneName))
+            {
                 Debug.LogError ("not registed Scene");
                 yield break;
             }
 
             Instance._isSceneUnloading = true;
             AsyncOperation unload = SceneManager.UnloadSceneAsync (sceneName);
-            while (!unload.isDone) {
+            while (!unload.isDone)
+            {
                 yield return 0;
             }
             Instance._isSceneUnloading = false;
 
             // callback
-            if (onComplete != null) {
+            if (onComplete != null)
+            {
                 onComplete ();
             }
 
