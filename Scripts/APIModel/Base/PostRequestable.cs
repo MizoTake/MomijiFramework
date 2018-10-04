@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,7 +14,11 @@ namespace Momiji
 			{
 				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
 			}
-			var data = UnityWebRequest.Post (uri, JsonUtility.ToJson (param));
+			var body = JsonUtility.ToJson (param);
+			Debug.Log (body);
+
+			var data = UnityWebRequest.Post (uri, ((IBodyParameterizable) param)?.Body ());
+
 			Header?.ForEach (_ =>
 			{
 				data.SetRequestHeader (_.Key, _.Value);

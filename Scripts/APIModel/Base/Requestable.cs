@@ -22,7 +22,7 @@ namespace Momiji
 
         protected string HostName { get; set; } = "";
         protected string Path { get; set; } = "";
-        protected Dictionary<string, string> Header { get; set; } = new Dictionary<string, string> () { { "Content-Type", "application/json" } };
+        protected Dictionary<string, string> Header { get; set; } = new Dictionary<string, string> () { { "Content-Type", "application/json; charset=UTF-8" } };
 
         protected virtual UnityWebRequest UpdateRequest (Param param) => new UnityWebRequest ();
 
