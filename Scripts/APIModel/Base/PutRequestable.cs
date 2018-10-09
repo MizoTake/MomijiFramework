@@ -9,12 +9,13 @@ namespace Momiji
 	{
 		protected override UnityWebRequest UpdateRequest (Param param)
 		{
+			var body = System.Text.Encoding.UTF8.GetBytes ("{}");
 			Uri uri = new Uri (HostName + Path);
 			if (param is IPathParameterizable)
 			{
 				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
 			}
-			var data = UnityWebRequest.Put (uri, JsonUtility.ToJson (param));
+			var data = UnityWebRequest.Put (uri, body);
 			Header?.ForEach (_ =>
 			{
 				data.SetRequestHeader (_.Key, _.Value);

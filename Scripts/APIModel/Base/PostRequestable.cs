@@ -15,10 +15,7 @@ namespace Momiji
 				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
 			}
 			var body = JsonUtility.ToJson (param);
-			Debug.Log (body);
-
 			var data = UnityWebRequest.Post (uri, ((IBodyParameterizable) param)?.Body ());
-
 			Header?.ForEach (_ =>
 			{
 				data.SetRequestHeader (_.Key, _.Value);
