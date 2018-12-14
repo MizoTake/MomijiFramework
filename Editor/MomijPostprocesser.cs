@@ -10,7 +10,9 @@ namespace Momiji
 
 		static void OnPostprocessAllAssets (string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
 		{
-
+			// Enum<EditorExtensionConst.AutoFileName>
+			// EditorExtensionConst.AutoFileName.ForEach ();
+			var file = AssetDatabase.LoadAssetAtPath ("", typeof (TextAsset));
 		}
 	}
 }
