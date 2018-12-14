@@ -8,6 +8,7 @@ using Momiji.Sample;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
+using Utf8Json;
 
 namespace Momiji
 {
@@ -49,13 +50,19 @@ namespace Momiji
                 using (TextReader stream = new StringReader (text))
                 {
                     text = stream.ReadToEnd ();
-                    if (array)
+                    Res response;
+                    if (typeof (Res) is IList<IResponsible>)
                     {
-                        // Responseで指定した配列で取得する(Default: model)
-                        text = "{ \"" + arrayName + "\": " + text + "}";
+                        text = "{ \" array \": " + text + "}";
+                        // var array = JsonSerializer.Deserialize<IList<IResponsible>> (text);
+                        // response = array.array;
+                    }
+                    else
+                    {
+                        response = JsonSerializer.Deserialize<Res> (text);
                     }
                     Debug.Log ("json : " + text);
-                    notify.OnNext (JsonUtility.FromJson<Res> (text));
+                    notify.OnNext (JsonSerializer.Deserialize<Res> (text));
                     notify.OnCompleted ();
                 }
             });

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Momiji.Sample
 {
-	public class SampleParamter : IPathParameterizable
+	public struct SampleParamter : IPathParameterizable
 	{
 		public int city;
 

@@ -6,19 +6,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UniRx;
+using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Networking;
+using Utf8Json;
 
 namespace Momiji
 {
-    public abstract class Requestable<Param, Res>
+    public abstract class Requestable<Param, Res> where Param : IParameterizable
     {
-
         private Task runing;
 
         protected IObserver<Res> notify;
-        protected string arrayName = "model";
-        protected bool array = false;
 
         protected string HostName { get; set; } = "";
         protected string Path { get; set; } = "";
@@ -28,15 +27,18 @@ namespace Momiji
 
         public async void Dispatch (Param param)
         {
+            if (!(typeof (Res) is IResponsible || typeof (Res) is IList<IResponsible>))
+            {
+                new Exception ("Momiji Error: Res is not a specified type");
+            }
             var data = UpdateRequest (param);
 
-            var task = new Task (async () =>
+            var task = new UniTask (async () =>
             {
                 Debug.Log ("calling api: " + data.url);
 
                 await data.SendWebRequest ();
 
-                // 通信エラーチェック
                 if (data.isNetworkError)
                 {
                     Debug.Log (data.error);
@@ -44,27 +46,22 @@ namespace Momiji
                 }
                 else
                 {
-                    // UTF8文字列として取得する
+                    Res response;
                     string text = data.downloadHandler.text;
-                    if (array)
+                    if (typeof (Res) is IList<IResponsible>)
                     {
-                        // Responseで指定した配列で取得する(Default: model)
-                        text = "{ \"" + arrayName + "\": " + text + "}";
+                        text = "{ \" array \": " + text + "}";
+                        // response = JsonSerializer.Deserialize<dynamic> (text);
+                        // response = response["array"];
+                    }
+                    else
+                    {
+                        response = JsonSerializer.Deserialize<Res> (text);
                     }
                     Debug.Log (data.uri.AbsoluteUri + ": " + text);
-                    notify.OnNext (JsonUtility.FromJson<Res> (text));
+                    notify.OnNext (JsonSerializer.Deserialize<Res> (text));
                 }
             });
-            if (runing == null)
-            {
-                runing = task;
-            }
-            else
-            {
-                await runing;
-                runing = task;
-            }
-            task.Start (TaskScheduler.FromCurrentSynchronizationContext ());
             await task;
         }
 
@@ -75,17 +72,6 @@ namespace Momiji
                 notify = _;
                 return Disposable.Create (() => { });
             });
-        }
-
-        //BOM有無の判定
-        private bool HasBomWithText (byte[] bytes)
-        {
-            return bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF;
-        }
-        //BOM消し
-        private string GetDeletedBomText (string text)
-        {
-            return text.Remove (0, 1);
         }
     }
 }

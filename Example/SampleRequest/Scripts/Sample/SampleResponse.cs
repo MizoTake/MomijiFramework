@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Momiji.Sample
 {
-	public class SampleResponse : IResponsible
+	public struct SampleResponse : IResponsible
 	{
 		public string title;
 	}

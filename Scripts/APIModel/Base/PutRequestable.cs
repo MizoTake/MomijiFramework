@@ -15,6 +15,10 @@ namespace Momiji
 			{
 				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
 			}
+			if (param is IBodyParameterizable)
+			{
+
+			}
 			var data = UnityWebRequest.Put (uri, body);
 			Header?.ForEach (_ =>
 			{

@@ -8,15 +8,15 @@ namespace Momiji.Sample
 {
     public class SampleMockRequest : MockRequestable<SampleParamter, SampleResponse>, ISampleRequest
     {
-        public SampleMockRequest()
+        public SampleMockRequest ()
         {
             Path = "sample.json";
         }
-        public IObservable<SampleResponse> Get => MockResponseData();
+        public IObservable<SampleResponse> Get => MockResponseData ();
     }
 
     public class SampleErrorRequest : ErrorRequestable<SampleParamter, SampleResponse>, ISampleRequest
     {
-        public IObservable<SampleResponse> Get => ErrorResponseData();
+        public IObservable<SampleResponse> Get => ErrorResponseData ();
     }
 }
