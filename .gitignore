@@ -48,3 +48,5 @@ USE_ASSETS_LICENSE
 **/Scripts/Utility/AudioEnums.cs
 **/Scripts/Utility/LayerEnum.cs
 **/Scripts/Utility/TagName.cs
+!Example/SampleRequest/*
+!Example/SampleRequest/Scripts/*
