@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public static class Enum<T> where T : struct, IConvertible
 {
@@ -13,10 +13,10 @@ public static class Enum<T> where T : struct, IConvertible
     {
         get
         {
-            if (!typeof(T).IsEnum)
-                throw new ArgumentException("T must be an enumerated type");
+            if (!typeof (T).IsEnum)
+                throw new ArgumentException ("T must be an enumerated type");
 
-            return Enum.GetNames(typeof(T)).Length;
+            return Enum.GetNames (typeof (T)).Length;
         }
     }
 
@@ -28,12 +28,26 @@ public static class Enum<T> where T : struct, IConvertible
     {
         get
         {
-            if (!typeof(T).IsEnum)
-                throw new ArgumentException("T must be an enumerated type");
+            if (!typeof (T).IsEnum)
+                throw new ArgumentException ("T must be an enumerated type");
 
             // return Enum.GetNames(typeof(T)).Length;
-            var rand = UnityEngine.Random.Range(0, Enum.GetNames(typeof(T)).Length);
-            return (T)Enum.ToObject(typeof(T), rand);
+            var rand = UnityEngine.Random.Range (0, Enum.GetNames (typeof (T)).Length);
+            return (T) Enum.ToObject (typeof (T), rand);
+        }
+    }
+}
+
+public static class EnumExtensions
+{
+    /// <summary>
+    /// Enumの要素をForEachで取得して処理
+    /// </summary>
+    public static void ForEach<T> (this Enum value, Action<T> action)
+    {
+        for (var i = 0; i < Enum.GetNames (typeof (T)).Length; i++)
+        {
+            action ((T) Enum.ToObject (typeof (T), i));
         }
     }
 }

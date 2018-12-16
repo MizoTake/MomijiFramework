@@ -18,6 +18,7 @@ namespace Momiji
         private Task runing;
 
         protected IObserver<Res> notify;
+        protected IObserver<IList<Res>> listNotify;
 
         protected string HostName { get; set; } = "";
         protected string Path { get; set; } = "";
@@ -47,19 +48,20 @@ namespace Momiji
                 else
                 {
                     Res response;
-                    string text = data.downloadHandler.text;
-                    if (typeof (Res) is IList<IResponsible>)
-                    {
-                        text = "{ \" array \": " + text + "}";
-                        // response = JsonSerializer.Deserialize<dynamic> (text);
-                        // response = response["array"];
-                    }
-                    else
-                    {
-                        response = JsonSerializer.Deserialize<Res> (text);
-                    }
+                    var text = data.downloadHandler.text;
+                    // if (typeof (Res) is IList<IResponsible>)
+                    // {
+                    //     text = "{ \" array \": " + text + "}";
+                    //     // var res = JsonSerializer.Deserialize<dynamic> (text);
+                    //     // response = res["array"] is Res[];
+                    // }
+                    // else
+                    // {
+                    //     response = JsonSerializer.Deserialize<Res> (text);
+                    // }
+                    response = JsonSerializer.Deserialize<Res> (text);
                     Debug.Log (data.uri.AbsoluteUri + ": " + text);
-                    notify.OnNext (JsonSerializer.Deserialize<Res> (text));
+                    notify.OnNext (response);
                 }
             });
             await task;
