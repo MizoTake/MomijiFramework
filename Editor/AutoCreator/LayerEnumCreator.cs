@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditorInternal;
 using UnityEngine;
 
 namespace Momiji
 {
-    [InitializeOnLoad]
     public class LayerEnumCreator
     {
         private const string LAYER_ENUM_HASH_KEY = "Layer_Enum_Hash";
@@ -22,6 +22,7 @@ namespace Momiji
             EditorApplication.delayCall += BuildlayerName;
         }
 
+        [DidReloadScripts (1)]
         static LayerEnumCreator ()
         {
             if (EditorApplication.isPlaying || Application.isPlaying)

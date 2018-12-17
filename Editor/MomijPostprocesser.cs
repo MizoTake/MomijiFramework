@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace Momiji
 {
 	public class MomijPostprocesser : AssetPostprocessor
 	{
-
-		static void OnPostprocessAllAssets (string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+		[DidReloadScripts (0)]
+		static void MomijiInit ()
 		{
 			foreach (var name in Enum.GetNames (typeof (EditorExtensionConst.AutoFileName)))
 			{

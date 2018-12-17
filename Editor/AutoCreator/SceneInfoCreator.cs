@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 using UnityEngine;
@@ -10,7 +11,6 @@ using UnityEngine.SceneManagement;
 
 namespace Momiji
 {
-    [InitializeOnLoad]
     public class SceneInfoCreator
     {
         private const string SCENE_ENUM_HASH_KEY = "Scene_Info_Hash";
@@ -24,6 +24,7 @@ namespace Momiji
             EditorApplication.delayCall += BuildSceneName;
         }
 
+        [DidReloadScripts (1)]
         static SceneInfoCreator ()
         {
             if (EditorApplication.isPlaying || Application.isPlaying)

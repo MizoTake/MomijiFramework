@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditorInternal;
 using UnityEngine;
 
 namespace Momiji
 {
-    [InitializeOnLoad]
     public class AudioEnumCreator
     {
         private const string AUDIO_ENUM_HASH_KEY = "Audio_Enum_Hash";
@@ -21,6 +21,8 @@ namespace Momiji
 
             BuildAudioName ();
         }
+
+        [DidReloadScripts (1)]
 
         static AudioEnumCreator ()
         {

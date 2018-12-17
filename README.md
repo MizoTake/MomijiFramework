@@ -2,6 +2,8 @@
 
 ## Developed Unity2018.x
 
+Require Unity's Scripting Runtime Vertion .Net 4.x Equivalent
+
 ## Use Assets
 
 - UniRx
