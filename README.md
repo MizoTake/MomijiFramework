@@ -6,9 +6,10 @@ Require Unity's Scripting Runtime Vertion .Net 4.x Equivalent
 
 ## Use Assets
 
-- UniRx
-- DoTween
-- Zenject
+- [UniRx](https://github.com/neuecc/UniRx)
+- [Utf8Json](https://github.com/neuecc/Utf8Json)
+- [DoTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676)
+- [Zenject](https://github.com/svermeulen/Zenject)
 
 ## Setup
 
