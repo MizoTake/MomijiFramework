@@ -13,7 +13,7 @@ using Utf8Json;
 
 namespace Momiji
 {
-    public abstract class Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
+    public abstract class Requestable<Param, Res> where Param : IParameterizable
     {
         private Task runing;
 

@@ -12,27 +12,27 @@ public class Requester : MonoBehaviour
 		var request = new SampleRequest ();
 
 		request.Get
-			.Subscribe (_ =>
+			.Subscribe (x =>
 			{
-				Debug.Log (_.title);
+				Debug.Log (x.title);
 			})
 			.AddTo (this);
 
 		var mockRequest = new SampleMockRequest ();
 
 		mockRequest.Get
-			.Subscribe (_ =>
+			.Subscribe (x =>
 			{
-				Debug.Log (_[0].title);
+				x.ForEach (xx => Debug.Log (xx.title));
 			})
 			.AddTo (this);
 
 		var errorRequest = new SampleErrorRequest ();
 
 		errorRequest.Get
-			.Subscribe (_ =>
+			.Subscribe (x =>
 			{
-				Debug.Log (_.title);
+				Debug.Log (x.title);
 			})
 			.AddTo (this);
 

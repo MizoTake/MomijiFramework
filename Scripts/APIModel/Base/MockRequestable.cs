@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Momiji.Sample;
 using UniRx;
+using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utf8Json;
 
 namespace Momiji
 {
-    public abstract class MockRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
+    public abstract class MockRequestable<Param, Res> : Requestable<Param, Res> where Param : IParameterizable
     {
         private readonly string DIRECTORY_NAME = "/MockAPI/";
 
@@ -32,41 +33,37 @@ namespace Momiji
 
         public new void Dispatch (Param param)
         {
-            var task = new Task (() =>
-            {
-                var path = HostName + Path;
-                Debug.Log ("reading json file: " + path);
+            var path = HostName + Path;
+            Debug.Log ("reading json file: " + path);
 
 #if UNITY_ANDROID
-                WWW reader = new WWW (path);
-                while (!reader.isDone) { }
-                string text = reader.text;
-                if (HasBomWithText (reader.bytes)) text = GetDeletedBomText (reader.text);
+            WWW reader = new WWW (path);
+            while (!reader.isDone) { }
+            string text = reader.text;
+            if (HasBomWithText (reader.bytes)) text = GetDeletedBomText (reader.text);
 #else
-                StreamReader reader = new StreamReader (path, Encoding.Default);
-                // UTF8文字列として取得する
-                string text = reader.ReadToEnd ();
+            StreamReader reader = new StreamReader (path, Encoding.Default);
+            // UTF8文字列として取得する
+            string text = reader.ReadToEnd ();
 #endif
-                using (TextReader stream = new StringReader (text))
+            using (TextReader stream = new StringReader (text))
+            {
+                text = stream.ReadToEnd ();
+                Res response;
+                if (typeof (Res) is IList)
                 {
-                    text = stream.ReadToEnd ();
-                    Res response;
-                    if (typeof (Res) is IList)
-                    {
-                        text = "{ \" array \": " + text + "}";
-                        var res = JsonSerializer.Deserialize<IList<Res>> (text);
-                        response = (Res) res;
-                    }
-                    else
-                    {
-                        response = JsonSerializer.Deserialize<Res> (text);
-                    }
-                    Debug.Log ("json : " + text);
-                    notify.OnNext (JsonSerializer.Deserialize<Res> (text));
-                    notify.OnCompleted ();
+                    text = "{ \" array \": " + text + "}";
+                    var res = JsonSerializer.Deserialize<IList<Res>> (text);
+                    response = (Res) res;
                 }
-            });
-            task.Start (TaskScheduler.FromCurrentSynchronizationContext ());
+                else
+                {
+                    response = JsonSerializer.Deserialize<Res> (text);
+                }
+                Debug.Log ("json : " + text);
+                notify.OnNext (JsonSerializer.Deserialize<Res> (text));
+                notify.OnCompleted ();
+            }
         }
 
         public IObservable<Res> MockResponseData ()
