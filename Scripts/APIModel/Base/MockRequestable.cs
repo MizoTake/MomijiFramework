@@ -51,11 +51,11 @@ namespace Momiji
                 {
                     text = stream.ReadToEnd ();
                     Res response;
-                    if (typeof (Res) is IList<IResponsible>)
+                    if (typeof (Res) is IList)
                     {
                         text = "{ \" array \": " + text + "}";
-                        // var array = JsonSerializer.Deserialize<IList<IResponsible>> (text);
-                        // response = array.array;
+                        var res = JsonSerializer.Deserialize<IList<Res>> (text);
+                        response = (Res) res;
                     }
                     else
                     {

@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Momiji.Sample
 {
-    public class SampleMockRequest : MockRequestable<SampleParamter, SampleResponse>, ISampleRequest
+    public class SampleMockRequest : MockRequestable<SampleParamter, SampleResponse[]>, IListSampleRequest
     {
         public SampleMockRequest ()
         {
             Path = "sample.json";
         }
-        public IObservable<SampleResponse> Get => MockResponseData ();
+        public IObservable<SampleResponse[]> Get => MockResponseData ();
     }
 
     public class SampleErrorRequest : ErrorRequestable<SampleParamter, SampleResponse>, ISampleRequest

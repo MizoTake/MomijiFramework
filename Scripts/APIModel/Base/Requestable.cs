@@ -13,7 +13,7 @@ using Utf8Json;
 
 namespace Momiji
 {
-    public abstract class Requestable<Param, Res> where Param : IParameterizable
+    public abstract class Requestable<Param, Res> where Param : IParameterizable where Res : IResponsible
     {
         private Task runing;
 
@@ -28,10 +28,6 @@ namespace Momiji
 
         public async void Dispatch (Param param)
         {
-            if (!(typeof (Res) is IResponsible || typeof (Res) is IList<IResponsible>))
-            {
-                new Exception ("Momiji Error: Res is not a specified type");
-            }
             var data = UpdateRequest (param);
 
             var task = new UniTask (async () =>
@@ -49,17 +45,16 @@ namespace Momiji
                 {
                     Res response;
                     var text = data.downloadHandler.text;
-                    // if (typeof (Res) is IList<IResponsible>)
-                    // {
-                    //     text = "{ \" array \": " + text + "}";
-                    //     // var res = JsonSerializer.Deserialize<dynamic> (text);
-                    //     // response = res["array"] is Res[];
-                    // }
-                    // else
-                    // {
-                    //     response = JsonSerializer.Deserialize<Res> (text);
-                    // }
-                    response = JsonSerializer.Deserialize<Res> (text);
+                    if (typeof (Res) is IList)
+                    {
+                        text = "{ \" array \": " + text + "}";
+                        var res = JsonSerializer.Deserialize<IList<Res>> (text);
+                        response = (Res) res;
+                    }
+                    else
+                    {
+                        response = JsonSerializer.Deserialize<Res> (text);
+                    }
                     Debug.Log (data.uri.AbsoluteUri + ": " + text);
                     notify.OnNext (response);
                 }

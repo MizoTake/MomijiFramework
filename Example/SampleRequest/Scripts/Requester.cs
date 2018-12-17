@@ -23,7 +23,7 @@ public class Requester : MonoBehaviour
 		mockRequest.Get
 			.Subscribe (_ =>
 			{
-				Debug.Log (_.title);
+				Debug.Log (_[0].title);
 			})
 			.AddTo (this);
 

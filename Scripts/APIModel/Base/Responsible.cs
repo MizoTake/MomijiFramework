@@ -8,9 +8,4 @@ namespace Momiji
 	{
 
 	}
-
-	public interface IListResponsible : IList, IResponsible
-	{
-
-	}
 }

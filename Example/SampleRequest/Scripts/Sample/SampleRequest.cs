@@ -11,6 +11,11 @@ namespace Momiji.Sample
 		IObservable<SampleResponse> Get { get; }
 	}
 
+	interface IListSampleRequest
+	{
+		IObservable<SampleResponse[]> Get { get; }
+	}
+
 	public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
 	{
 		public SampleRequest ()
