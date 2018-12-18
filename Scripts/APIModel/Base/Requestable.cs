@@ -15,11 +15,7 @@ namespace Momiji
 {
     public abstract class Requestable<Param, Res> where Param : IParameterizable
     {
-        private Task runing;
-
         protected IObserver<Res> notify;
-        protected IObserver<IList<Res>> listNotify;
-
         protected string HostName { get; set; } = "";
         protected string Path { get; set; } = "";
         protected Dictionary<string, string> Header { get; set; } = new Dictionary<string, string> () { { "Content-Type", "application/json; charset=UTF-8" } };
