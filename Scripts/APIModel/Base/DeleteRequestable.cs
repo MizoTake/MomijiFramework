@@ -14,9 +14,9 @@ namespace Momiji
 				uri = new Uri (uri, ((IPathParameterizable) param).QueryPath ());
 			}
 			var data = UnityWebRequest.Delete (uri);
-			Header?.ForEach (_ =>
+			Header?.ForEach (x =>
 			{
-				data.SetRequestHeader (_.Key, _.Value);
+				data.SetRequestHeader (x.Key, x.Value);
 			});
 			return data;
 		}
