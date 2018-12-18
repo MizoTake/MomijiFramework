@@ -4,8 +4,5 @@ using UnityEngine;
 
 namespace Momiji
 {
-	public interface IResponsible
-	{
-
-	}
+	public interface IResponsible {	}
 }
