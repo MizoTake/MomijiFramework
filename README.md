@@ -6,9 +6,10 @@ Require Unity's Scripting Runtime Vertion .Net 4.x Equivalent
 
 ## Use Assets
 
-- UniRx
-- DoTween
-- Zenject
+- [UniRx](https://github.com/neuecc/UniRx)
+- [Utf8Json](https://github.com/neuecc/Utf8Json)
+- [DoTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676)
+- [Zenject](https://github.com/svermeulen/Zenject)
 
 ## Setup
 
@@ -64,6 +65,21 @@ public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISa
 }
 ```
 
+ルート配列対応時
+
+[SampleMockRequest.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleMockRequest.cs)
+
+```csharp:SampleMockRequest.cs
+public class SampleMockRequest : MockRequestable<SampleParamter, SampleResponse[]>, IListSampleRequest
+    {
+        public SampleMockRequest ()
+        {
+            Path = "sample.json";
+        }
+        public IObservable<SampleResponse[]> Get => MockResponseData ();
+    }
+```
+
 [SampleResponse.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleResponse.cs)
 
 ```csharp:SampleParamter.cs
@@ -86,9 +102,17 @@ public class Requester : MonoBehaviour
 		var request = new SampleRequest ();
 
 		request.Get
-			.Subscribe (_ =>
+			.Subscribe (x =>
 			{
-				Debug.Log (_.title);
+				Debug.Log (x.title);
+			})
+			.AddTo (this);
+
+		//root array response
+		mockRequest.Get
+			.Subscribe (x =>
+			{
+				x.ForEach (xx => Debug.Log (xx.title));
 			})
 			.AddTo (this);
 
@@ -97,6 +121,8 @@ public class Requester : MonoBehaviour
 		var param = new SampleParamter (city: 130010);
 
 		request.Dispatch (param);
+
+		mockRequest.Dispatch (param);
 
 		/ ..省略.. /
 	}
