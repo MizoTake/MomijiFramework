@@ -49,17 +49,6 @@ namespace Momiji
             using (TextReader stream = new StringReader (text))
             {
                 text = stream.ReadToEnd ();
-                Res response;
-                if (typeof (Res) is IList)
-                {
-                    text = "{ \" array \": " + text + "}";
-                    var res = JsonSerializer.Deserialize<IList<Res>> (text);
-                    response = (Res) res;
-                }
-                else
-                {
-                    response = JsonSerializer.Deserialize<Res> (text);
-                }
                 Debug.Log ("json : " + text);
                 notify.OnNext (JsonSerializer.Deserialize<Res> (text));
                 notify.OnCompleted ();

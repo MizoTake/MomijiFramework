@@ -43,20 +43,9 @@ namespace Momiji
                 }
                 else
                 {
-                    Res response;
                     var text = data.downloadHandler.text;
-                    if (typeof (Res) is IList)
-                    {
-                        text = "{ \" array \": " + text + "}";
-                        var res = JsonSerializer.Deserialize<IList<Res>> (text);
-                        response = (Res) res;
-                    }
-                    else
-                    {
-                        response = JsonSerializer.Deserialize<Res> (text);
-                    }
                     Debug.Log (data.uri.AbsoluteUri + ": " + text);
-                    notify.OnNext (response);
+                    notify.OnNext (JsonSerializer.Deserialize<Res> (text));
                 }
             });
             await task;
