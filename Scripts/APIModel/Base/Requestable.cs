@@ -49,9 +49,9 @@ namespace Momiji
 
         protected IObservable<Res> ResponseData ()
         {
-            return Observable.Create<Res> (_ =>
+            return Observable.Create<Res> (x =>
             {
-                notify = _;
+                notify = x;
                 return Disposable.Create (() => { });
             });
         }
