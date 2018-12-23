@@ -84,7 +84,7 @@ namespace Momiji
         static void WriteTagNameArray (System.Text.StringBuilder builder, List<string> tagNames)
         {
             builder.Append ("\t").Append ("public static readonly string[] TAGS = new string[] {");
-            tagNames.ForEach (tagName => builder.AppendFormat (@" {0}" + ", ", tagName));
+            tagNames.ForEach (tagName => builder.AppendFormat (@" ""{0}"",", tagName));
             builder.AppendLine ("}" + ";");
         }
     }

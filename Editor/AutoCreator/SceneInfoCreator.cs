@@ -97,7 +97,7 @@ namespace Momiji
             sceneNames.ForEach ((sceneName, i) =>
             {
                 var comma = (i == sceneNames.Count () - 1) ? "" : ",";
-                builder.AppendFormat (" {0}" + comma, sceneName);
+                builder.AppendFormat (" \"{0}\"" + comma, sceneName);
             });
             builder.AppendLine (" }; ");
         }
