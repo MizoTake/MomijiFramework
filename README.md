@@ -52,17 +52,22 @@ public class SampleParamter : IPathParameterizable
 
 ```csharp:SampleRequest.cs
 interface ISampleRequest
-{
-	IObservable<SampleResponse> Get;
-}
-
-public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
-{
-	public SampleRequest ()
 	{
-		HostName = "http://weather.livedoor.com/forecast/webservice/json/v1";
+		IObservable<SampleResponse> Get { get; }
 	}
-}
+
+	interface IListSampleRequest
+	{
+		IObservable<SampleResponse[]> Get { get; }
+	}
+
+	public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
+	{
+		public SampleRequest ()
+		{
+			HostName = "http://weather.livedoor.com/forecast/webservice/json/v1";
+		}
+	}
 ```
 
 ルート配列対応時
