@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace Momiji.Sample
 {
-	interface ISampleRequest
+	public interface ISampleRequest
 	{
 		IObservable<SampleResponse> Get { get; }
 	}
 
-	interface IListSampleRequest
+	public interface IListSampleRequest
 	{
 		IObservable<SampleResponse[]> Get { get; }
 	}

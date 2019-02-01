@@ -1,0 +1,17 @@
+{
+    "name": "MomijiAssembly",
+    "references": [
+        "UniRx",
+        "Zenject",
+        "UniRx.Async",
+        "Utf8Json"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

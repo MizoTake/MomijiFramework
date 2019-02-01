@@ -7,8 +7,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Momiji {
-    public abstract class TableView<T> : UIBehaviour where T : UnityEngine.Component {
+namespace Momiji
+{
+    public abstract class TableView<T> : UIBehaviour where T : UnityEngine.Component
+    {
         [SerializeField]
         private UIBehaviour _cellPrefab;
         public ReactiveProperty<int> SnapIndex = new ReactiveProperty<int> (0);
@@ -20,9 +22,12 @@ namespace Momiji {
         public abstract void TableViewCell (int index, T cell);
     }
 
-    public static class TableViewExtension {
-        public static void Init<T> (this TableView<T> tableView, ScrollViewType type = ScrollViewType.None) where T : UnityEngine.Component {
-            switch (type) {
+    public static class TableViewExtension
+    {
+        public static void Init<T> (this TableView<T> tableView, ScrollViewType type = ScrollViewType.None) where T : UnityEngine.Component
+        {
+            switch (type)
+            {
                 case ScrollViewType.SnapX:
                     tableView.SnapX ();
                     break;
@@ -35,12 +40,15 @@ namespace Momiji {
             tableView.OnDestroyAsObservable ().Subscribe (_ => tableView.Pool.Dispose ());
         }
 
-        public static void ReloadData<T> (this TableView<T> tableView) where T : UnityEngine.Component {
-            tableView.Cells.ForEach ((_) => {
+        public static void ReloadData<T> (this TableView<T> tableView) where T : UnityEngine.Component
+        {
+            tableView.Cells.ForEach ((_) =>
+            {
                 tableView.Pool.Return (_);
             });
             tableView.Cells.Clear ();
-            for (int i = 0; i < tableView.CellCount (); i++) {
+            for (int i = 0; i < tableView.CellCount (); i++)
+            {
                 var item = tableView.Pool.Rent ();
                 var cell = item.GetComponent<T> ();
                 tableView.TableViewCell (i, cell);
@@ -48,7 +56,8 @@ namespace Momiji {
             }
         }
 
-        public static void SnapX<T> (this TableView<T> tableView) where T : UnityEngine.Component {
+        public static void SnapX<T> (this TableView<T> tableView) where T : UnityEngine.Component
+        {
             tableView.SnapIndex.Value = tableView.CellCount () - 1;
             var scrollRect = tableView.transform.parent.parent.GetComponent<ScrollRect> ();
             var cellRectTrans = tableView.CellPrefab.transform.GetComponent<RectTransform> ();
@@ -57,14 +66,16 @@ namespace Momiji {
             scrollRect.OnEndDragAsObservable ()
                 .Where (_ => Mathf.Abs (_.delta.x) > 1.0f)
                 .Select (_ => Mathf.Sign (_.delta.x))
-                .Subscribe (distance => {
+                .Subscribe (distance =>
+                {
                     tableView.SnapIndex.Value = Mathf.Clamp (tableView.SnapIndex.Value + (int) distance, 0, tableView.CellCount () - 1);
                 })
                 .AddTo (tableView);
 
             scrollRect.OnEndDragAsObservable ()
                 .Where (_ => Mathf.Abs (_.delta.x) <= 1.0f)
-                .Subscribe (_ => {
+                .Subscribe (_ =>
+                {
                     DOTween.To (() => scrollRect.horizontalScrollbar.value,
                             value => scrollRect.horizontalScrollbar.value = value,
                             cellPer * (float) (tableView.CellCount () - tableView.SnapIndex.Value - 1), 0.3f)
@@ -73,7 +84,8 @@ namespace Momiji {
                 .AddTo (tableView);
 
             tableView.SnapIndex
-                .Subscribe (_ => {
+                .Subscribe (_ =>
+                {
                     DOTween.To (() => scrollRect.horizontalScrollbar.value,
                             value => scrollRect.horizontalScrollbar.value = value,
                             cellPer * (float) (tableView.CellCount () - tableView.SnapIndex.Value - 1), 0.3f)
@@ -82,7 +94,8 @@ namespace Momiji {
                 .AddTo (tableView);
         }
 
-        public static void SnapY<T> (this TableView<T> tableView) where T : UnityEngine.Component {
+        public static void SnapY<T> (this TableView<T> tableView) where T : UnityEngine.Component
+        {
             tableView.SnapIndex.Value = 0;
             var scrollRect = tableView.transform.parent.parent.GetComponent<ScrollRect> ();
             var cellRectTrans = tableView.CellPrefab.transform.GetComponent<RectTransform> ();
@@ -91,14 +104,16 @@ namespace Momiji {
             scrollRect.OnEndDragAsObservable ()
                 .Where (_ => Mathf.Abs (_.delta.y) > 1.0f)
                 .Select (_ => Mathf.Sign (_.delta.y))
-                .Subscribe (distance => {
+                .Subscribe (distance =>
+                {
                     tableView.SnapIndex.Value = Mathf.Clamp (tableView.SnapIndex.Value + (int) distance, 0, tableView.CellCount () - 1);
                 })
                 .AddTo (tableView);
 
             scrollRect.OnEndDragAsObservable ()
                 .Where (_ => Mathf.Abs (_.delta.y) <= 1.0f)
-                .Subscribe (_ => {
+                .Subscribe (_ =>
+                {
                     DOTween.To (() => scrollRect.verticalScrollbar.value,
                             value => scrollRect.verticalScrollbar.value = value,
                             cellPer * (float) (tableView.CellCount () - tableView.SnapIndex.Value - 1), 0.3f)
@@ -107,7 +122,8 @@ namespace Momiji {
                 .AddTo (tableView);
 
             tableView.SnapIndex
-                .Subscribe (_ => {
+                .Subscribe (_ =>
+                {
                     DOTween.To (() => scrollRect.verticalScrollbar.value,
                             value => scrollRect.verticalScrollbar.value = value,
                             cellPer * (float) (tableView.CellCount () - tableView.SnapIndex.Value - 1), 0.3f)
@@ -118,7 +134,8 @@ namespace Momiji {
     }
 }
 
-public enum ScrollViewType {
+public enum ScrollViewType
+{
     None,
     SnapX,
     SnapY
