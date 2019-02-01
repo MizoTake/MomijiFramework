@@ -18,7 +18,7 @@ public class Requester : MonoBehaviour
 			})
 			.AddTo (this);
 
-		var mockRequest = new SampleMockRequest ();
+		var mockRequest = new SampleListMockRequest ();
 
 		mockRequest.Get
 			.Subscribe (x =>

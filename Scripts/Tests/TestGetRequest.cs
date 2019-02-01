@@ -13,6 +13,9 @@ namespace Momiji.Sample
         public partial class TestGetRequest
         {
             SampleRequest requester;
+            SampleMockRequest mockRequester;
+            SampleListMockRequest mockListRequester;
+            SampleErrorRequest errorRequester;
             CompositeDisposable dispose = new CompositeDisposable ();
 
             ~TestGetRequest ()
@@ -24,6 +27,9 @@ namespace Momiji.Sample
             public void SetUp ()
             {
                 requester = new SampleRequest ();
+                mockRequester = new SampleMockRequest ();
+                mockListRequester = new SampleListMockRequest ();
+                errorRequester = new SampleErrorRequest ();
             }
 
             [TearDown]
@@ -33,7 +39,7 @@ namespace Momiji.Sample
             }
 
             [Test]
-            public void SimplePasses ()
+            public void WebRequest ()
             {
                 requester.Get
                     .Subscribe (x =>
@@ -45,6 +51,59 @@ namespace Momiji.Sample
 
                 var param = new SampleParamter (city: 130010);
                 requester.Dispatch (param);
+            }
+
+            [Test]
+            public void MockRequest ()
+            {
+                mockRequester.Get
+                    .Subscribe (x =>
+                    {
+                        Debug.Log (x.title);
+                        Assert.AreEqual (x.title, "Test Response");
+                    })
+                    .AddTo (dispose);
+
+                var param = new SampleParamter (city: 130010);
+                mockRequester.Dispatch (param);
+            }
+
+            [Test]
+            public void MockListRequest ()
+            {
+                mockListRequester.Get
+                    .Subscribe (x =>
+                    {
+                        x.ForEach (xx =>
+                            Debug.Log (xx.title)
+                        );
+                        Assert.AreEqual (x[0].title, "Array index zero");
+                        Assert.AreEqual (x[1].title, "Array index one");
+                    })
+                    .AddTo (dispose);
+
+                var param = new SampleParamter (city: 130010);
+                mockListRequester.Dispatch (param);
+            }
+
+            [Test]
+            public void ErrorRequest ()
+            {
+                errorRequester.Get
+                    .Subscribe (onNext: x =>
+                        {
+                            Debug.Log (x.title);
+                            // エラーに通るはずがないため
+                            Assert.IsTrue (false);
+                        },
+                        onError : x =>
+                        {
+                            Assert.IsTrue (x is System.Exception);
+                        })
+                    .AddTo (dispose);
+
+                var param = new SampleParamter (city: 130010);
+                errorRequester.Dispatch (param);
             }
         }
 
