@@ -22,9 +22,9 @@ namespace Momiji
         public static string CreatePath (this IPathParameterizable param, params string[] path)
         {
             var query = "";
-            path.ForEach (_ =>
+            path.ForEach (x =>
             {
-                query += _ + "&";
+                query += x + "&";
             });
             return "?" + query;
         }
@@ -35,9 +35,9 @@ namespace Momiji
         public static List<IMultipartFormSection> CreateBody (this IBodyParameterizable param, params string[] bodyData)
         {
             var formData = new List<IMultipartFormSection> ();
-            bodyData.ForEach (_ =>
+            bodyData.ForEach (x =>
             {
-                formData.Add (new MultipartFormDataSection (_));
+                formData.Add (new MultipartFormDataSection (x));
             });
             return formData;
         }
