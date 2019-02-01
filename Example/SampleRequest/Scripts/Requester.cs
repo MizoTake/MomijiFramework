@@ -18,9 +18,18 @@ public class Requester : MonoBehaviour
 			})
 			.AddTo (this);
 
-		var mockRequest = new SampleListMockRequest ();
+		var mockRequest = new SampleMockRequest ();
 
 		mockRequest.Get
+			.Subscribe (x =>
+			{
+				Debug.Log (x.title);
+			})
+			.AddTo (this);
+
+		var mockListRequest = new SampleListMockRequest ();
+
+		mockListRequest.Get
 			.Subscribe (x =>
 			{
 				x.ForEach (xx => Debug.Log (xx.title));
@@ -40,6 +49,7 @@ public class Requester : MonoBehaviour
 
 		request.Dispatch (param);
 		mockRequest.Dispatch (param);
+		mockListRequest.Dispatch (param);
 		errorRequest.Dispatch (param);
 	}
 }

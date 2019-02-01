@@ -52,37 +52,63 @@ public class SampleParamter : IPathParameterizable
 
 ```csharp:SampleRequest.cs
 interface ISampleRequest
-	{
-		IObservable<SampleResponse> Get { get; }
-	}
+{
+	IObservable<SampleResponse> Get { get; }
+}
 
-	interface IListSampleRequest
-	{
-		IObservable<SampleResponse[]> Get { get; }
-	}
+interface IListSampleRequest
+{
+	IObservable<SampleResponse[]> Get { get; }
+}
 
-	public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
+public class SampleRequest : GetRequestable<SampleParamter, SampleResponse>, ISampleRequest
+{
+	public SampleRequest ()
 	{
-		public SampleRequest ()
-		{
-			HostName = "http://weather.livedoor.com/forecast/webservice/json/v1";
-		}
+		HostName = "http://weather.livedoor.com/forecast/webservice/json/v1";
 	}
+}
 ```
 
-ルート配列対応時
+Sample Mock Request
 
 [SampleMockRequest.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleMockRequest.cs)
 
 ```csharp:SampleMockRequest.cs
-public class SampleMockRequest : MockRequestable<SampleParamter, SampleResponse[]>, IListSampleRequest
-    {
-        public SampleMockRequest ()
-        {
-            Path = "sample.json";
-        }
-        public IObservable<SampleResponse[]> Get => MockResponseData ();
-    }
+public class SampleMockRequest : MockRequestable<SampleParamter, SampleResponse>, ISampleRequest
+{
+	public SampleMockRequest ()
+	{
+		Path = "Response.json";
+	}
+	public IObservable<SampleResponse> Get => MockResponseData ();
+}
+```
+
+Sample Mock Request List Resopnse
+
+[SampleMockRequest.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleMockRequest.cs)
+
+```csharp:SampleMockRequest.cs
+public class SampleListMockRequest : MockRequestable<SampleParamter, SampleResponse[]>, IListSampleRequest
+{
+	public SampleListMockRequest ()
+	{
+		Path = "ListResponse.json";
+	}
+	public IObservable<SampleResponse[]> Get => MockResponseData ();
+}
+```
+
+Sample Error Request
+
+[SampleMockRequest.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleMockRequest.cs)
+
+```csharp:SampleMockRequest.cs
+public class SampleErrorRequest : ErrorRequestable<SampleParamter, SampleResponse>, ISampleRequest
+{
+	public IObservable<SampleResponse> Get => ErrorResponseData ();
+}
 ```
 
 [SampleResponse.cs](https://github.com/MizoTake/MomijiFramework/blob/master/Example/SampleRequest/Scripts/Sample/SampleResponse.cs)
@@ -113,23 +139,39 @@ public class Requester : MonoBehaviour
 			})
 			.AddTo (this);
 
-		//root array response
+		var mockRequest = new SampleMockRequest ();
+
 		mockRequest.Get
+			.Subscribe (x =>
+			{
+				Debug.Log (x.title);
+			})
+			.AddTo (this);
+
+		var mockListRequest = new SampleListMockRequest ();
+
+		mockListRequest.Get
 			.Subscribe (x =>
 			{
 				x.ForEach (xx => Debug.Log (xx.title));
 			})
 			.AddTo (this);
 
-		/ ..省略.. /
+		var errorRequest = new SampleErrorRequest ();
+
+		errorRequest.Get
+			.Subscribe (x =>
+			{
+				Debug.Log (x.title);
+			})
+			.AddTo (this);
 
 		var param = new SampleParamter (city: 130010);
 
 		request.Dispatch (param);
-
 		mockRequest.Dispatch (param);
-
-		/ ..省略.. /
+		mockListRequest.Dispatch (param);
+		errorRequest.Dispatch (param);
 	}
 }
 ```
