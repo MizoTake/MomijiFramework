@@ -1,7 +1,8 @@
 {
     "name": "Tests",
     "references": [
-        "MomijiAssembly"
+        "MomijiAssembly",
+        "UniRx"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"
