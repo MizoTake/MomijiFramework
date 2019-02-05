@@ -93,7 +93,7 @@ namespace Momiji.Sample
                     .Subscribe (onNext: x =>
                         {
                             Debug.Log (x.title);
-                            // エラーに通るはずがないため
+                            // onNextに通るはずがないため
                             Assert.IsTrue (false);
                         },
                         onError : x =>
