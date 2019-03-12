@@ -9,7 +9,6 @@ using UniRx;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Networking;
-using Utf8Json;
 
 namespace Momiji
 {
@@ -50,7 +49,7 @@ namespace Momiji
             {
                 text = stream.ReadToEnd ();
                 Debug.Log ("json : " + text);
-                notify.OnNext (JsonSerializer.Deserialize<Res> (text));
+                notify.OnNext (JsonUtility.FromJson<Res> (text));
                 notify.OnCompleted ();
             }
         }

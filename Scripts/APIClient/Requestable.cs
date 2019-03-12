@@ -9,7 +9,6 @@ using UniRx;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Networking;
-using Utf8Json;
 
 namespace Momiji
 {
@@ -41,7 +40,7 @@ namespace Momiji
                 {
                     var text = data.downloadHandler.text;
                     Debug.Log (data.uri.AbsoluteUri + ": " + text);
-                    notify.OnNext (JsonSerializer.Deserialize<Res> (text));
+                    notify.OnNext (JsonUtility.FromJson<Res> (text));
                 }
             });
             await task;

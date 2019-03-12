@@ -3,8 +3,7 @@
     "references": [
         "UniRx",
         "Zenject",
-        "UniRx.Async",
-        "Utf8Json"
+        "UniRx.Async"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
